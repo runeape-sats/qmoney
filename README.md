@@ -1,5 +1,7 @@
 # QMoney: A Peer-to-Peer Quantum Money System
 
+v0.0.1 draft
+
 ## Abstract
 QMoney introduces a novel quantum money system that combines the unforgeable nature of quantum states with a peer-to-peer (P2P) transaction framework inspired by Bitcoin. Using a 2-qubit quantum bill, QMoney leverages the **no-cloning theorem** to ensure that currency cannot be counterfeited, while a decentralized network of nodes verifies and transfers ownership without a central mint or bank. This white paper details the preparation, verification, and P2P exchange of quantum bills, illustrated through a toy example using photon polarization and polarizers. By merging quantum security with Bitcoin’s P2P philosophy, QMoney offers a vision for a trustless, quantum-secure digital currency.
 
@@ -140,3 +142,6 @@ QMoney fuses quantum unforgeability with Bitcoin’s P2P framework, offering a t
 (Describes Shor’s algorithm, highlighting Bitcoin’s vulnerability to quantum attacks, motivating QMoney’s quantum-resistant design.)
 - Grover, L. K. (1996). A fast quantum mechanical algorithm for database search. Proceedings of the 28th Annual ACM Symposium on Theory of Computing (STOC '96), 212–219.
 (Introduces Grover’s algorithm, relevant to QMoney’s scalability challenges with larger qubit counts.)
+
+## How to Contribue
+Please do PR for one section at a time.
