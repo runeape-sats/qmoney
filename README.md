@@ -1,6 +1,6 @@
 # QMoney: A Peer-to-Peer Quantum Money System
 
-v0.0.1 draft
+v0.0.2
 
 ## Abstract
 QMoney introduces a novel quantum money system that combines the unforgeable nature of quantum states with a peer-to-peer (P2P) transaction framework inspired by Bitcoin. Using a 2-qubit quantum bill, QMoney leverages the **no-cloning theorem** to ensure that currency cannot be counterfeited, while a decentralized network of nodes verifies and transfers ownership without a central mint or bank. This white paper details the preparation, verification, and P2P exchange of quantum bills, illustrated through a toy example using photon polarization and polarizers. By merging quantum security with Bitcoin’s P2P philosophy, QMoney offers a vision for a trustless, quantum-secure digital currency.
@@ -129,6 +129,82 @@ For two qubits, counterfeiting success drops to 25% with one Hadamard-basis qubi
 QMoney fuses quantum unforgeability with Bitcoin’s P2P framework, offering a trustless, quantum-secure currency. This 2-qubit model, demonstrated with polarizers, showcases its potential. Future work could scale QMoney with advanced quantum networks and ledgers, heralding a new era of decentralized finance.
 
 ---
+
+## Appendix A: 512/1024-Qubit QMoney in a Pure Software Simulator (Quorum Public Verification + MPS)
+This appendix describes a simplest-possible path to **512 or 1024 qubits** that:
+- Supports **public verification** in the sense that *anyone can request verification from the network*;
+- Avoids exotic public-key quantum money constructions;
+- Runs on consumer hardware by keeping the bill state **very low entanglement** (product-state MPS with bond dimension D=1).
+
+### A.1 Design choice: verification by a quorum (not by the bill holder)
+The simplest way to get “public verification” while keeping the quantum state easy (MPS-friendly) is to make verification an **online service provided by a verifier quorum**:
+- A verifier quorum collectively holds the bill’s secret measurement data (bases/bits).
+- The bill holder never learns the full secret.
+- Verification **consumes** the presented quantum state.
+- If valid, the quorum **re-mints a fresh bill** for the recipient (new serial, new secret, new quantum state).
+
+This keeps the quantum component “unforgeable by physics” (no-cloning), while the “public” property comes from decentralized access (anyone can ask), not from non-interactive public verifiability.
+
+### A.2 Data model (one bill)
+For a bill with `n ∈ {512, 1024}` qubits:
+- `serial`: unique identifier (e.g., 128-bit random).
+- `owner_pk`: current owner public key (ledger field).
+- `C`: public commitment (e.g., `C = H(serial || B || V || nonce)`).
+- Secret strings (known only to the verifier quorum):
+  - `B ∈ {0,1}^n` where `B[i]=0` means Z-basis, `B[i]=1` means X-basis.
+  - `V ∈ {0,1}^n` target outcomes in that basis.
+
+### A.3 Quantum state preparation (BB84 product state)
+Each qubit `i` is prepared as:
+- If `B[i]=0` and `V[i]=0`: `|0⟩`
+- If `B[i]=0` and `V[i]=1`: `|1⟩`
+- If `B[i]=1` and `V[i]=0`: `|+⟩`
+- If `B[i]=1` and `V[i]=1`: `|−⟩`
+
+This state is a tensor product of single-qubit states, so it is an MPS with **bond dimension D=1**.
+
+### A.4 Public verification + transfer protocol (verify-and-remint)
+1. **Transfer intent**: sender creates a classical transaction `tx` naming `(old_serial, receiver_pk, fee, ...)` and signs it.
+2. **Present bill**: sender submits the bill’s quantum state plus `tx` to a verifier quorum (in software, this can be passing an object/handle).
+3. **Quorum verification**:
+   - The quorum measures the submitted state in the secret bases `B`.
+   - It checks outcomes against `V` with an acceptance rule (exact match, or thresholded for noise).
+4. **Ledger update (atomic)**:
+   - If accepted: mark `old_serial` spent; set ownership of a newly minted bill to `receiver_pk`.
+   - If rejected: mark `old_serial` invalid/spent (the state was consumed by measurement anyway).
+5. **Re-mint**: quorum generates fresh `(new_serial, B', V')` and prepares a new `n`-qubit product state for the receiver.
+
+This is “one-time spend” at the quantum layer, but supports repeated circulation via re-minting.
+
+### A.5 MPS simulation requirements (consumer hardware)
+For this BB84 product-state design, you only need:
+- Single-qubit gates: Hadamard `H` (to implement X-basis measurement as `H` then Z-measure).
+- Projective measurement with collapse.
+
+Implementation notes:
+- Represent the bill as an MPS with tensors `A[i]` of shape `(1, 2, 1)`.
+- Applying a single-qubit unitary is a `2x2` multiply on the physical index of `A[i]`.
+- Z-basis measurement samples probabilities from the local 2-vector and collapses it to `|0⟩` or `|1⟩`.
+- For `n=1024`, this remains linear-time and linear-memory in `n` as long as you do not introduce entangling gates (bond dimension stays 1).
+
+### A.6 Security level (toy intercept/resend counterfeiter)
+In the simplest threat model where a counterfeiter must produce a state that passes verification without knowing `B`, a per-qubit basis guess succeeds with probability `3/4`. If the quorum checks all qubits with exact matching:
+- Forgery success: `P_forge = (3/4)^n`
+- Security bits: `s = -log2(P_forge) = n * log2(4/3) ≈ 0.415 * n`
+
+So:
+- `n=512`: `s ≈ 212.5` bits (`P_forge ≈ 2^-212.5`)
+- `n=1024`: `s ≈ 425.0` bits (`P_forge ≈ 2^-425`)
+
+If you allow up to `t` mismatches for noise, replace the exact-match probability with a binomial tail `Pr[Binomial(n, 3/4) ≥ n - t]`, which increases attacker success; choose `t` based on your simulated noise model.
+
+### A.7 Suggested parameters (software-only v0)
+- Qubits per bill: `n=1024` (or `n=512` for faster iteration).
+- Verification: measure all `n` qubits; accept if `matches ≥ n - t`.
+- Noise tolerance: start with `t=0` (no noise) and later try `t = floor(0.01 * n)` in a noisy simulator.
+- Verifier quorum: `N = 3f + 1` nodes; require `2f + 1` signed approvals to finalize “accepted + reminted” on the ledger.
+- Secret storage: for a toy, replicate `(B,V)` across the quorum; for stronger fault tolerance, store `B` and `V` via threshold secret sharing.
+
 ## 8. Citations
 - Nakamoto, S. (2008). Bitcoin: A Peer-to-Peer Electronic Cash System. Retrieved from https://bitcoin.org/bitcoin.pdf
 (The original Bitcoin white paper introducing the P2P transaction framework and blockchain, which QMoney adapts for its decentralized verification.)
@@ -143,5 +219,7 @@ QMoney fuses quantum unforgeability with Bitcoin’s P2P framework, offering a t
 - Grover, L. K. (1996). A fast quantum mechanical algorithm for database search. Proceedings of the 28th Annual ACM Symposium on Theory of Computing (STOC '96), 212–219.
 (Introduces Grover’s algorithm, relevant to QMoney’s scalability challenges with larger qubit counts.)
 
-## How to Contribue
-Please do PR for one section at a time.
+## Demo (Software MPS Quorum)
+Run the pure software simulator demo:
+- `python qmoney_mps_quorum_demo.py --n 512`
+- `python qmoney_mps_quorum_demo.py --n 1024`
