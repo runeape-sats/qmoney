@@ -1,6 +1,6 @@
 # QMoney: A Peer-to-Peer Quantum Money System
 
-v0.0.2
+v0.0.3
 
 ## Abstract
 QMoney introduces a novel quantum money system that combines the unforgeable nature of quantum states with a peer-to-peer (P2P) transaction framework inspired by Bitcoin. Using a 2-qubit quantum bill, QMoney leverages the **no-cloning theorem** to ensure that currency cannot be counterfeited, while a decentralized network of nodes verifies and transfers ownership without a central mint or bank. This white paper details the preparation, verification, and P2P exchange of quantum bills, illustrated through a toy example using photon polarization and polarizers. By merging quantum security with Bitcoin’s P2P philosophy, QMoney offers a vision for a trustless, quantum-secure digital currency.
@@ -16,22 +16,25 @@ Traditional currencies and even modern cryptocurrencies like Bitcoin face challe
 
 ## 2. Theoretical Background
 ### 2.1 The No-Cloning Theorem
-The **no-cloning theorem**, established by Wootters and Zurek in 1982, underpins QMoney’s security. It asserts that no unitary operation can duplicate an unknown quantum state |ψ⟩ = α|0⟩ + β|1⟩ into |ψ⟩ ⊗ |ψ⟩. Attempts to copy—e.g., by measuring and reconstructing—collapse the state, losing superposition information (e.g., |+⟩ becomes |0⟩ or |1⟩). In QMoney, this ensures that quantum bills cannot be forged, as any duplication attempt introduces detectable errors, a feature Bitcoin lacks, relying instead on cryptographic hardness.
+The **no-cloning theorem**, established by Wootters and Zurek in 1982, underpins QMoney’s security. It asserts that there is no physical process (no unitary) that can take an unknown quantum state `|ψ⟩ = α|0⟩ + β|1⟩` and produce a perfect copy `|ψ⟩ ⊗ |ψ⟩` for all possible `α,β`.
+
+Attempts to copy an unknown state (e.g., by measuring and reconstructing) generally disturb it: measuring in the wrong basis collapses superposition information (e.g., `|+⟩` becomes `|0⟩` or `|1⟩`). In QMoney, this disturbance is the anti-counterfeiting signal.
 
 ### 2.2 Qubits and Measurement Bases
 A **qubit**, unlike Bitcoin’s classical bits, exists in a superposition within a two-dimensional Hilbert space:
-- |0⟩: e.g., horizontal polarization;
-- |1⟩: e.g., vertical polarization;
-- |+⟩ = (|0⟩ + |1⟩)/√2 or |-⟩ = (|0⟩ - |1⟩)/√2, superpositions akin to diagonal polarizations.
+- `|0⟩` and `|1⟩` (computational / Z basis);
+- `|+⟩ = (|0⟩ + |1⟩)/√2` and `|−⟩ = (|0⟩ − |1⟩)/√2` (Hadamard / X basis).
 
 Measurement occurs in bases:
-- **Standard basis**: |0⟩, |1⟩;
-- **Hadamard basis**: |+⟩, |-⟩, accessed via the Hadamard gate H = (1/√2) * [1 1; 1 -1].
+- **Standard (Z) basis**: `|0⟩`, `|1⟩`;
+- **Hadamard (X) basis**: `|+⟩`, `|−⟩`, which can be implemented as “apply Hadamard then measure in Z”, where `H = (1/√2) * [[1, 1], [1, -1]]`.
 
 QMoney uses these bases to encode bills, with verification performed by P2P nodes rather than a central authority, mirroring Bitcoin’s distributed validation.
 
 ### 2.3 Bitcoin’s Peer-to-Peer Model
-Bitcoin operates on a P2P network where nodes—computers running the Bitcoin protocol—validate transactions using a proof-of-work consensus mechanism. Transactions are broadcast to the network, recorded on a blockchain, and verified without intermediaries. QMoney adopts this P2P structure, replacing Bitcoin’s digital signatures with quantum state measurements, aiming for a decentralized quantum currency resilient to both classical and quantum threats.
+Bitcoin operates on a P2P network where nodes (computers running the Bitcoin protocol) validate transactions using a proof-of-work consensus mechanism. Transactions are broadcast to the network, recorded on a blockchain, and verified without intermediaries.
+
+QMoney adopts this P2P structure, but must account for a key difference: quantum states are not copyable, and verification consumes the state. This makes “broadcast the bill to every node and let everyone verify” incompatible with no-cloning.
 
 ---
 
@@ -48,29 +51,42 @@ In QMoney, a 2-qubit quantum bill is created by any user (a “minter”) in the
    - Basis 1, bit 0: |+⟩;
    - Basis 1, bit 1: |-⟩.
 
-The minter broadcasts the quantum state (e.g., |0⟩ ⊗ |-⟩) and a classical “serial number” (basis and bit pairs, e.g., “0:0, 1:1”) encrypted with their quantum-resistant public key. Unlike Bitcoin’s mining, issuance is lightweight, requiring only quantum state generation.
+The minter assigns a classical `serial` and prepares the quantum state (e.g., `|0⟩ ⊗ |−⟩`). For a decentralized system, the secret basis/bit data used for verification should not be broadcast in plaintext; it must be held by a verifier set (replicated or threshold-shared) together with a public commitment (see Appendix A).
 
 ### 3.2 Verification
-Verification is decentralized, performed by P2P nodes:
-- **Serial Number Decryption**: Nodes decrypt the serial number using the minter’s public key.
-- **Measurement**:
-  - Basis 0: Measure in the standard basis.
-  - Basis 1: Apply a Hadamard gate, then measure in the standard basis.
-- **Consensus**: Nodes broadcast measurement results. If the majority match the serial number’s bit values (e.g., 0 for Qubit 0, 1 for Qubit 1), the bill is valid. This mirrors Bitcoin’s consensus but uses quantum measurements instead of hash validation.
+Verification is decentralized, but a quantum system has a constraint that Bitcoin does not: **the same quantum state cannot be independently checked by many nodes without consuming it**.
+
+For QMoney, a workable “public verification” interpretation is:
+- Anyone can request verification from the network.
+- A consensus mechanism (PoW/PoS/permissioned membership) selects a **verifier committee/quorum** (Sybil resistance happens at the committee-selection layer).
+- The quorum collectively holds the bill’s secret measurement data (bases/bits), replicated or threshold-shared.
+- The quorum measures the bill and signs an **accept/reject attestation** that the rest of the network validates classically.
+
+Appendix A specifies a simplest quorum-based “verify-and-remint” flow that scales to 512/1024 qubits in a pure software simulator.
 
 ### 3.3 Peer-to-Peer Transfer
-To spend a bill, the owner transfers the quantum state to a recipient via a quantum channel (e.g., optical fiber) and broadcasts a transaction to the P2P network, akin to Bitcoin’s transaction propagation. Nodes re-verify the state, updating a quantum-aware blockchain—a ledger recording ownership transitions without storing the fragile quantum states themselves. Double-spending is prevented by network consensus: once spent, the original state is measured (destroyed), and only the new owner’s state is valid.
+To spend a bill, the owner transfers the quantum state to the selected verifier quorum along with a signed transaction naming the intended recipient. The quorum verifies the state (consuming it by measurement) and, if valid, the network finalizes an ownership update.
+
+**Quantum-aware blockchain (minimal definition):** a classical ledger that stores only classical metadata, e.g.:
+- `serial`, a commitment to verification data, and current `owner_pk`;
+- a spent flag / status;
+- the verifier quorum’s signed attestation for the verification event.
+
+The ledger does not store the quantum state; it stores public evidence that a specific serial was consumed in a verified spend. Double-spending is prevented by standard ledger finality rules (e.g., BFT finality or Nakamoto-style confirmation), not by re-checking the quantum state.
 
 ### 3.4 Security
 QMoney’s security combines quantum and P2P strengths:
 - **No-Cloning**: Prevents state duplication.
-- **Basis Secrecy**: Encrypted serial numbers hide bases from adversaries.
-- **P2P Consensus**: Decentralized verification thwarts centralized attacks, unlike traditional quantum money’s reliance on a bank.
+- **Secret Verification Data**: Bases/bits are kept from adversaries (e.g., held by a verifier quorum rather than published).
+- **Consensus Finality**: A classical consensus protocol prevents replay/double-spend of a serial once verification consumes the bill.
 
 ---
 
-## 4. Simulating QMoney with Polarizers
-### 4.1 Setup
+## 4. Simulating QMoney
+### 4.1 Software Simulator (Statevector/MPS)
+For a practical toy implementation today, simulation is easiest in software. Appendix A (and `qmoney_mps_quorum_demo.py`) describes a quorum-verified design where each bill is a BB84 product state that can be represented as an MPS with bond dimension `D=1`, enabling 512/1024-qubit bills on consumer hardware.
+
+### 4.2 Setup
 We simulate a QMoney bill using photon polarization:
 - |0⟩: Horizontal (H);
 - |1⟩: Vertical (V);
@@ -80,21 +96,21 @@ We simulate a QMoney bill using photon polarization:
 
 Nodes use polarizers and HWPs to verify states in a P2P setting.
 
-### 4.2 Example QMoney Bill
+### 4.3 Example QMoney Bill
 A user prepares:
 - **Qubit 0**: Basis 0, bit 0 → |0⟩ (H);
 - **Qubit 1**: Basis 1, bit 1 → |-⟩ (A).
 
 State: |0⟩ ⊗ |-⟩ (H ⊗ A). Serial number (“0:0, 1:1”) is encrypted and broadcast.
 
-### 4.3 Verification Process
+### 4.4 Verification Process
 Nodes in the P2P network:
 - **Qubit 0**: Measure with H polarizer → Passes, yields |0⟩.
 - **Qubit 1**: Apply HWP (A → V), measure with V polarizer → Passes, yields |1⟩.
 
 Results (‘10’) are broadcast; majority consensus confirms validity.
 
-### 4.4 Simulating a Counterfeiting Attempt
+### 4.5 Simulating a Counterfeiting Attempt
 An adversary measures in the standard basis:
 - Qubit 0 (H): H → |0⟩;
 - Qubit 1 (A): H or V (50% each), e.g., V.
@@ -118,10 +134,12 @@ For two qubits, counterfeiting success drops to 25% with one Hadamard-basis qubi
 ---
 
 ## 6. Challenges and Limitations
-- **Scalability**: Two qubits are insufficient for robust security; 100+ qubits would resist quantum attacks like Grover’s algorithm.
-- **Noise**: Decoherence in quantum channels (e.g., fiber optics) risks false rejections.
-- **Infrastructure**: Quantum hardware and networks (e.g., quantum repeaters) are nascent in 2025.
-- **Blockchain Integration**: A quantum-aware ledger must handle state destruction and P2P verification efficiently.
+- **Security Scaling**: Two qubits are only pedagogical; practical counterfeit probabilities require hundreds to thousands of qubits depending on the verification rule and noise tolerance (Appendix A gives concrete scaling for BB84-style verification).
+- **Noise vs Counterfeit**: Real channels introduce loss and bit/phase errors; verification must be thresholded and parameterized so honest bills pass with high probability while forgeries remain unlikely.
+- **State Transfer Practicality**: Moving quantum states between peers requires quantum networking primitives; in practice, verification will likely be “online” and localized (committee/quorum) rather than “every node measures the bill”.
+- **Sybil Resistance / Committee Selection**: A P2P verification story must specify how verifier committees are chosen (PoW/PoS/permissioned membership) and how equivocation is handled.
+- **Issuance / Supply Policy**: If “anyone can mint,” supply is unbounded; a realistic design needs an issuance rule (e.g., a Nakamoto-style schedule, or minting only as part of verify-and-remint so total supply is conserved).
+- **Hybrid Security**: Even with quantum anti-counterfeiting, the system still relies on classical cryptography for identities, commitments, and ledger consensus.
 
 ---
 
