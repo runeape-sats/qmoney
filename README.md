@@ -3,7 +3,7 @@
 v0.0.3
 
 ## Abstract
-QMoney introduces a novel quantum money system that combines the unforgeable nature of quantum states with a peer-to-peer (P2P) transaction framework inspired by Bitcoin. Using a 2-qubit quantum bill, QMoney leverages the **no-cloning theorem** to ensure that currency cannot be counterfeited, while a decentralized network of nodes verifies and transfers ownership without a central mint or bank. This white paper details the preparation, verification, and P2P exchange of quantum bills, illustrated through a toy example using photon polarization and polarizers. By merging quantum security with Bitcoin’s P2P philosophy, QMoney offers a vision for a trustless, quantum-secure digital currency.
+QMoney introduces a novel quantum money system that combines the unforgeable nature of quantum states with a peer-to-peer (P2P) transaction framework inspired by Bitcoin. Using a 2-qubit quantum bill, QMoney leverages the **no-cloning theorem** to ensure that currency cannot be counterfeited, while a decentralized network of nodes verifies and transfers ownership without a central mint or bank. More precisely, the construction in this repository is a **quorum-verified, private-key quantum cash design with verify-and-remint**, rather than a non-interactive public-key quantum money scheme. This white paper details the preparation, verification, and P2P exchange of quantum bills, illustrated through a toy example using photon polarization. By merging quantum security with Bitcoin’s P2P philosophy, QMoney offers a vision for a trustless, quantum-secure digital currency.
 
 ---
 
@@ -60,7 +60,8 @@ For QMoney, a workable “public verification” interpretation is:
 - Anyone can request verification from the network.
 - A consensus mechanism (PoW/PoS/permissioned membership) selects a **verifier committee/quorum** (Sybil resistance happens at the committee-selection layer).
 - The quorum collectively holds the bill’s secret measurement data (bases/bits), replicated or threshold-shared.
-- The quorum measures the bill and signs an **accept/reject attestation** that the rest of the network validates classically.
+- All qubits are measured across the participating quorum members before an accept/reject result is produced.
+- The quorum signs an **accept/reject attestation** that the rest of the network validates classically.
 
 Appendix A specifies a simplest quorum-based “verify-and-remint” flow that scales to 512/1024 qubits in a pure software simulator.
 
@@ -84,7 +85,7 @@ QMoney’s security combines quantum and P2P strengths:
 
 ## 4. Simulating QMoney
 ### 4.1 Software Simulator (Statevector/MPS)
-For a practical toy implementation today, simulation is easiest in software. Appendix A (and `qmoney_mps_quorum_demo.py`) describes a quorum-verified design where each bill is a BB84 product state that can be represented as an MPS with bond dimension `D=1`, enabling 512/1024-qubit bills on consumer hardware.
+For a practical toy implementation today, simulation is easiest in software. Appendix A (and `qmoney_mps_quorum_demo.py`) describes a quorum-verified design where each bill is a BB84 product state that can be represented as an MPS with bond dimension `D=1`, enabling 512/1024-qubit bills on consumer hardware. On the same classical machines, straightforward **state-vector simulation** is already practical for roughly **30–32 logical qubits**, while **matrix-product-state / tensor-network** methods extend much farther for these low-entanglement product-state bills.
 
 ### 4.2 Setup
 We simulate a QMoney bill using photon polarization:
@@ -189,7 +190,8 @@ This state is a tensor product of single-qubit states, so it is an MPS with **bo
    - It checks outcomes against `V` with an acceptance rule (exact match, or thresholded for noise).
 4. **Ledger update (atomic)**:
    - If accepted: mark `old_serial` spent; set ownership of a newly minted bill to `receiver_pk`.
-   - If rejected: mark `old_serial` invalid/spent (the state was consumed by measurement anyway).
+   - If rejected after measurement: mark `old_serial` invalid/spent (the state was consumed by measurement anyway).
+   - If a quorum cannot be assembled before verification starts, leave `old_serial` live and abort without consuming the bill.
 5. **Re-mint**: quorum generates fresh `(new_serial, B', V')` and prepares a new `n`-qubit product state for the receiver.
 
 This is “one-time spend” at the quantum layer, but supports repeated circulation via re-minting.
@@ -204,6 +206,7 @@ Implementation notes:
 - Applying a single-qubit unitary is a `2x2` multiply on the physical index of `A[i]`.
 - Z-basis measurement samples probabilities from the local 2-vector and collapses it to `|0⟩` or `|1⟩`.
 - For `n=1024`, this remains linear-time and linear-memory in `n` as long as you do not introduce entangling gates (bond dimension stays 1).
+- As a practical rule of thumb on current classical hardware, brute-force state-vector simulation is typically comfortable up to about `30–32` logical qubits, after which tensor-network / MPS methods become the natural route for this low-entanglement construction.
 
 ### A.6 Security level (toy intercept/resend counterfeiter)
 In the simplest threat model where a counterfeiter must produce a state that passes verification without knowing `B`, a per-qubit basis guess succeeds with probability `3/4`. If the quorum checks all qubits with exact matching:
