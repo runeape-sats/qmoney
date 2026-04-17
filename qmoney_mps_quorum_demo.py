@@ -188,21 +188,20 @@ class QuorumService:
 
         rng = random.Random(seed)
 
-        # Partition indices across nodes to reflect distributed measurement.
-        n_nodes = len(self.nodes)
-        assignments: List[List[int]] = [[] for _ in range(n_nodes)]
-        for i in range(bill.n):
-            assignments[i % n_nodes].append(i)
+        participants = [node for node in self.nodes if node.has_secret(bill.serial)]
 
-        approvals = 0
+        # If we cannot assemble a quorum, verification never starts and the bill remains live.
+        if len(participants) < self.threshold:
+            return False, None
+
+        # Partition indices across participating nodes so the whole bill is checked.
+        assignments: List[List[int]] = [[] for _ in range(len(participants))]
+        for i in range(bill.n):
+            assignments[i % len(participants)].append(i)
+
         matches_total = 0
         measured_total = 0
-        for node_idx, node in enumerate(self.nodes):
-            if approvals >= self.threshold:
-                break
-            if not node.has_secret(bill.serial):
-                continue
-
+        for node_idx, node in enumerate(participants):
             # Each node gets an independent RNG stream.
             node_rng = random.Random(rng.getrandbits(64) ^ (node_idx << 32) ^ node.node_id)
             matches, measured = node.verify_indices(
@@ -213,12 +212,6 @@ class QuorumService:
             )
             matches_total += matches
             measured_total += measured
-            approvals += 1
-
-        # If we didn't reach threshold, treat as verification failure.
-        if approvals < self.threshold:
-            ledger.mark_spent(bill.serial)
-            return False, None
 
         # Bill was consumed by measurement; spend it regardless of outcome.
         ledger.mark_spent(bill.serial)
