@@ -12,6 +12,10 @@ Traditional currencies and even modern cryptocurrencies like Bitcoin face challe
 
 **QMoney** extends this concept into a **peer-to-peer quantum money system**, integrating Bitcoin’s decentralized ethos. In Bitcoin, a P2P network of nodes validates transactions without a central authority, using a public ledger (the blockchain) to track ownership. QMoney adapts this model: instead of a mint and bank, users and nodes in a network collectively issue, verify, and transfer 2-qubit quantum bills. This white paper presents a minimal 2-qubit scheme to illustrate QMoney’s core mechanisms—quantum state preparation, decentralized verification, and P2P exchange—while providing a practical example with photon polarization. As of March 2025, quantum hardware remains experimental, but QMoney lays a theoretical foundation for a future where quantum and P2P technologies converge.
 
+### Key architecture references
+- [`docs/architecture/public-vs-private-key-qmoney.md`](docs/architecture/public-vs-private-key-qmoney.md) — canonical statement of the current repo architecture: QMoney today is private-key quantum cash at the quantum layer, with a classical public-key ownership/settlement layer.
+- [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md) — key reference explaining Peter Shor’s arguments about quantum money and how they should shape QMoney’s terminology, architecture split, and future public-key research track.
+
 ---
 
 ## 2. Theoretical Background
