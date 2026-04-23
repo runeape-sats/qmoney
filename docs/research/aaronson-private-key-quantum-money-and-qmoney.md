@@ -1,9 +1,7 @@
 # Aaronson on Private-Key Quantum Money and Implications for QMoney
 
 Primary materials used for this note:
-- Whisper transcript of Scott Aaronson’s QCrypt 2013 talk, `Private-key quantum money`
-  - `docs/plans/transcripts/2026-04-22-aaronson-private-key-quantum-money-whisper.txt`
-  - `docs/plans/transcripts/2026-04-22-aaronson-private-key-quantum-money-whisper.json`
+- Local Whisper transcript of Scott Aaronson’s QCrypt 2013 talk, `Private-key quantum money`
 - Scott Aaronson and Paul Christiano, *Quantum Money from Hidden Subspaces*
   - `https://www.scottaaronson.com/papers/moneyfull.pdf`
 - Scott Aaronson, *Two announcements* / talk abstract on *Shtetl-Optimized*

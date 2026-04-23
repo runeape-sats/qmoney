@@ -2,8 +2,7 @@
 
 Source context:
 - Peter Shor seminar on quantum money (`hnY40A5fde0`)
-- Companion local notes:
-  - `docs/plans/2026-04-22-peter-shor-quantum-money-video-memo.md`
+- Companion architecture note:
   - `docs/architecture/public-vs-private-key-qmoney.md`
 
 This note is the repo-facing synthesis: not just what Shor argued, but how those arguments should change the way QMoney is described, structured, and extended.
@@ -200,7 +199,7 @@ Recommended split:
 - engineering hardening, noise models, tests
 
 ### Public-key research track
-- new note families under `qmoney_publickey/`
+- new note families under `pubkey_hidden_subspace/`
 - hidden-subspace / oracle-backed prototypes
 - later noise-tolerant public-key experiments
 - possibly later frontier tracks like group actions
@@ -246,9 +245,9 @@ Role:
 - define the two-layer architecture,
 - prevent category confusion.
 
-### B. Keep the Shor video memo as source notes
-Existing file:
-- `docs/plans/2026-04-22-peter-shor-quantum-money-video-memo.md`
+### B. Keep local Shor source notes outside the committed repo tree
+Existing source material:
+- local, uncommitted seminar notes / timestamped extraction
 
 Role:
 - timestamped extraction,
@@ -282,9 +281,9 @@ Current simulator-style work should remain the baseline implementation of:
 
 ### B. Create a research namespace before adding public-key code
 Recommended paths:
-- `qmoney_publickey/__init__.py`
-- `qmoney_publickey/README.md`
-- `qmoney_publickey/hidden_subspace.py`
+- `pubkey_hidden_subspace/__init__.py`
+- `pubkey_hidden_subspace/README.md`
+- `pubkey_hidden_subspace/note_family.py`
 
 This enforces the distinction in code, not just prose.
 
@@ -351,7 +350,7 @@ Checklist items should include:
 - whether the mint can issue duplicates with the same serial,
 - whether the proposal is really public-key or only access-public.
 
-## Task 4: Establish `qmoney_publickey/`
+## Task 4: Establish `pubkey_hidden_subspace/`
 Even before real implementation, a namespace and README would force conceptual separation.
 
 ## Task 5: Preserve the current simulator as baseline, not stepping stone rhetoric

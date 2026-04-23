@@ -1,0 +1,22 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# Repo-local tooling environments
+.venv/
+.tools/
+
+# TLA+ / TLC model-checking artifacts
+states/
+metadir/
+*.out
+*.dot
+*.trace.json
+*.tlc
+
+# Temporary editor / OS artifacts
+*.swp
+.DS_Store
+
+# Local planning / transcript scratchpad material
+docs/plans/

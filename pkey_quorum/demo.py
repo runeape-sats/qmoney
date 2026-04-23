@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """QMoney quorum + MPS (D=1) demo.
 
 This is a pure software simulator for the Appendix-A design in README.md:
@@ -238,7 +238,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="QMoney quorum + MPS (D=1) software demo")
     parser.add_argument("--n", type=int, default=512, choices=[32, 128, 512, 1024])
     parser.add_argument("--nodes", type=int, default=4, help="quorum size N")
-    parser.add_argument("--threshold", type=int, default=3, help="approvals required")
+    parser.add_argument("--threshold", type=int, default=3, help="minimum live participants required to attempt verification")
     parser.add_argument("--tolerance", type=int, default=0, help="allowed mismatches")
     parser.add_argument("--noise-bitflip", type=float, default=0.0, help="bit-flip probability per measured qubit")
     parser.add_argument("--seed", type=int, default=123, help="RNG seed for reproducible demo")

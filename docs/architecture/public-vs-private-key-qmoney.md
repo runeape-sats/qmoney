@@ -23,7 +23,7 @@ The current QMoney design has two different security layers.
 ### 1.1 Quantum note layer
 Each bill is represented by a quantum state together with a classical serial number.
 
-In the current simulator family (`qmoney_mps_quorum_demo.py`), the note is a BB84-style product state determined by hidden per-qubit data:
+In the current simulator family (`pkey_quorum/demo.py`), the note is a BB84-style product state determined by hidden per-qubit data:
 - `B[i]` chooses the measurement basis (`Z` or `X`)
 - `V[i]` chooses the expected outcome in that basis
 
@@ -145,14 +145,14 @@ The right first research direction is not "make BB84 public"; it is to implement
 A clean split helps prevent overclaiming and confusion.
 
 ### Keep under current QMoney baseline
-- `qmoney_mps_quorum_demo.py`
+- `pkey_quorum/demo.py`
 - current BB84/product-state note logic
 - quorum verification and attestation logic
 - classical ownership / settlement logic
 - tests for counterfeit probability, quorum behavior, and remint semantics
 
 ### Add under a separate public-key namespace
-- `qmoney_publickey/...`
+- `pubkey_hidden_subspace/...`
 - hidden-subspace / oracle-backed simulators
 - future noise-tolerant public-key experiments
 - literature-backed research notes
@@ -171,6 +171,8 @@ A future QMoney-PK track would deserve the term **public-key quantum money** onl
 - **clear note-family distinction:** the construction is not merely the existing BB84 note with relabeled metadata
 
 The most realistic first milestone is a small, research-only hidden-subspace simulator that demonstrates the different verification model clearly and honestly.
+
+For clarity: a toy simulator that directly publishes the accepting support for software inspection is still useful as a verifier-model sketch, but it is **not yet** a genuine public-key unforgeability result.
 
 ---
 
