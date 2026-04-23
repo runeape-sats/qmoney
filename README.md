@@ -15,6 +15,7 @@ Traditional currencies and even modern cryptocurrencies like Bitcoin face challe
 ### Key architecture references
 - [`docs/architecture/public-vs-private-key-qmoney.md`](docs/architecture/public-vs-private-key-qmoney.md) — canonical statement of the current repo architecture: QMoney today is private-key quantum cash at the quantum layer, with a classical public-key ownership/settlement layer.
 - [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md) — key reference explaining Peter Shor’s arguments about quantum money and how they should shape QMoney’s terminology, architecture split, and future public-key research track.
+- [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md) — key reference grounded in Aaronson’s QCrypt private-key quantum money talk and related papers, focusing on adaptive-query security, compact-secret tradeoffs, and why QMoney fits the distributed private-key quantum cash lineage.
 
 ---
 
