@@ -128,6 +128,7 @@ not near-term deployment of production quantum money.
 
 ### Architecture
 - [`docs/architecture/public-vs-private-key-qmoney.md`](docs/architecture/public-vs-private-key-qmoney.md) — canonical statement of the current repo architecture and why QMoney is private-key quantum cash rather than public-key quantum money.
+- [`docs/architecture/software-mps-quorum-design.md`](docs/architecture/software-mps-quorum-design.md) — preserved technical appendix for the current software-only MPS/quorum baseline, including data model, protocol flow, simulation assumptions, and security intuition.
 
 ### Research notes
 - [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md) — how Peter Shor’s arguments should shape QMoney’s architecture split, terminology, and public-key research boundaries.
