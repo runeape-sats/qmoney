@@ -150,6 +150,62 @@ The current simulator keeps the note family intentionally simple:
 
 This is a useful private-key baseline, not a claim of true public-key quantum money.
 
+### Actual implementation sample
+
+The implementation lives in [`qmoney_mps_quorum_demo.py`](qmoney_mps_quorum_demo.py). At a high level it exposes:
+- `Ledger` for spent-state and owner tracking
+- `QuorumNode` for secret-holding verifiers
+- `QuorumService` for minting plus `verify_and_remint`
+- `Bill` / `BillSecret` for the note and its hidden verification data
+
+A minimal end-to-end example from the current implementation looks like this:
+
+```python
+from qmoney_mps_quorum_demo import Ledger, QuorumNode, QuorumService
+
+nodes = [QuorumNode(i) for i in range(4)]
+quorum = QuorumService(nodes, threshold=3)
+ledger = Ledger()
+
+bill = quorum.mint_bill(32, owner="alice", ledger=ledger)
+
+accepted, new_bill = quorum.verify_and_remint(
+    bill,
+    claimant="alice",
+    receiver="bob",
+    ledger=ledger,
+    tolerance=0,
+    noise_bitflip_p=0.0,
+    seed=123,
+)
+
+print("accepted", accepted)
+print("old spent", ledger.is_spent(bill.serial))
+print("new owner", ledger.owner_of(new_bill.serial) if new_bill else None)
+```
+
+The built-in CLI demo then shows the intended system behavior:
+
+```bash
+python qmoney_mps_quorum_demo.py --n 32 --nodes 4 --threshold 3 --forge-trials 10000
+```
+
+Expected shape of output:
+
+```text
+transfer alice->bob accepted=True
+double-spend accepted=False
+new serial minted to bob: <hex-serial>
+forge success rate: <x>/10000
+```
+
+That sample captures the current implementation thesis of the repo:
+- mint a private-key BB84-style note
+- let a quorum verify it using hidden basis/bit data
+- consume the original note on verification
+- re-mint a fresh note for the receiver
+- reject double-spend attempts at the ledger layer
+
 ---
 
 ## Research direction
