@@ -115,7 +115,7 @@ This gives one-time quantum spend semantics with repeated circulation achieved b
 
 ## 6. Mapping to the current implementation
 
-The current code implementing this baseline is in [`qmoney_mps_quorum_demo.py`](../../qmoney_mps_quorum_demo.py).
+The current code implementing this baseline is in [`pkey_quorum/demo.py`](../../pkey_quorum/demo.py).
 
 ### Main objects
 - `Bill`
@@ -138,7 +138,7 @@ The implementation currently guarantees:
 - accepted bills are re-minted with a fresh serial for the receiver
 - double-spend attempts fail at the ledger layer
 
-The test coverage in `tests/test_qmoney.py` currently checks:
+The test coverage in `tests/test_pkey_quorum.py` currently checks:
 - all qubits are measured even when threshold is less than node count
 - a bill is not spent when quorum cannot be assembled before verification begins
 
@@ -214,7 +214,8 @@ This is only the simple product-state intercept/resend threat model, but it is t
 Good starting points for the baseline simulator:
 
 - qubits per bill: `n=512` or `n=1024`
-- threshold: `2f+1` approvals out of `3f+1` nodes
+- current code path: `threshold` is the minimum number of live verifier nodes required to start verification; once that gate passes, the demo measures across all participating nodes with replicated secrets
+- future direction: explore explicit `2f+1` approval semantics out of `3f+1` nodes rather than the current availability-gate simplification
 - tolerance: start with `0`, then introduce small mismatch budgets under noise
 - secret storage:
   - start with full replication across quorum nodes in software

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QMoney Oracle Flow Diagram</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'JetBrains Mono', monospace; background: #020617; min-height: 100vh; padding: 2rem; color: white; }
+    .container { max-width: 1280px; margin: 0 auto; }
+    .header { margin-bottom: 2rem; }
+    .header-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+    .pulse-dot { width: 12px; height: 12px; background: #fb7185; border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 1.75rem; }
+    .diagram-container { background: rgba(15,23,42,0.55); border-radius: 1rem; border: 1px solid #1e293b; padding: 1.5rem; overflow-x: auto; }
+    svg { width: 100%; min-width: 1180px; display: block; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .card { background: rgba(15,23,42,0.55); border-radius: 0.75rem; border: 1px solid #1e293b; padding: 1.25rem; }
+    .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .cyan { background: #22d3ee; } .emerald { background: #34d399; } .violet { background: #a78bfa; } .amber { background: #fbbf24; } .rose { background: #fb7185; }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { list-style: none; color: #94a3b8; font-size: 0.75rem; }
+    .card li { margin-bottom: 0.375rem; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>QMoney Oracle Logic Flow</h1>
+      </div>
+      <p class="subtitle">How the current hidden-subspace toy verifier, TLA+ oracle model, and Z3 inductive checker line up across the flatter pkey_quorum/pubkey_hidden_subspace/tla/z3 layout.</p>
+    </div>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1220 900">
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)"/>
+
+        <rect x="45" y="35" width="1130" height="810" rx="12" fill="rgba(251,113,133,0.05)" stroke="#fb7185" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="60" y="56" fill="#fb7185" font-size="10" font-weight="600">Current logic flow: code-level hidden-subspace verifier + abstract oracle lifecycle model</text>
+
+        <rect x="90" y="95" width="250" height="92" rx="8" fill="#0f172a"/>
+        <rect x="90" y="95" width="250" height="92" rx="8" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="215" y="121" fill="white" font-size="12" font-weight="600" text-anchor="middle">1. HiddenSubspaceMint</text>
+        <text x="215" y="143" fill="#94a3b8" font-size="9" text-anchor="middle">serial + generators</text>
+        <text x="215" y="157" fill="#94a3b8" font-size="9" text-anchor="middle">span(generators) = A</text>
+        <text x="215" y="171" fill="#94a3b8" font-size="9" text-anchor="middle">orthogonal complement = A⊥</text>
+
+        <rect x="470" y="95" width="270" height="92" rx="8" fill="#0f172a"/>
+        <rect x="470" y="95" width="270" height="92" rx="8" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="605" y="121" fill="white" font-size="12" font-weight="600" text-anchor="middle">2. Authentic note minted</text>
+        <text x="605" y="143" fill="#94a3b8" font-size="9" text-anchor="middle">|A&gt; = uniform superposition over A</text>
+        <text x="605" y="157" fill="#94a3b8" font-size="9" text-anchor="middle">support exactly equals A</text>
+        <text x="605" y="171" fill="#94a3b8" font-size="9" text-anchor="middle">norm is 1</text>
+
+        <rect x="870" y="95" width="250" height="92" rx="8" fill="#0f172a"/>
+        <rect x="870" y="95" width="250" height="92" rx="8" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="995" y="121" fill="white" font-size="12" font-weight="600" text-anchor="middle">3. Public key view</text>
+        <text x="995" y="143" fill="#94a3b8" font-size="9" text-anchor="middle">subspace vectors for A</text>
+        <text x="995" y="157" fill="#94a3b8" font-size="9" text-anchor="middle">dual vectors for A⊥</text>
+        <text x="995" y="171" fill="#94a3b8" font-size="9" text-anchor="middle">toy public verifier data</text>
+
+        <line x1="342" y1="141" x2="468" y2="141" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <line x1="742" y1="141" x2="868" y2="141" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+        <rect x="120" y="265" width="300" height="120" rx="8" fill="#0f172a"/>
+        <rect x="120" y="265" width="300" height="120" rx="8" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="270" y="292" fill="white" font-size="12" font-weight="600" text-anchor="middle">4A. Authentic presentation path</text>
+        <text x="270" y="316" fill="#94a3b8" font-size="9" text-anchor="middle">note.support() == A</text>
+        <text x="270" y="330" fill="#94a3b8" font-size="9" text-anchor="middle">hadamard_transform(note).support() == A⊥</text>
+        <text x="270" y="344" fill="#94a3b8" font-size="9" text-anchor="middle">verify(note) returns True</text>
+        <text x="270" y="362" fill="#34d399" font-size="8" text-anchor="middle">tests cover this case</text>
+
+        <rect x="510" y="265" width="300" height="120" rx="8" fill="#0f172a"/>
+        <rect x="510" y="265" width="300" height="120" rx="8" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="660" y="292" fill="white" font-size="12" font-weight="600" text-anchor="middle">4B. Counterfeit presentation path</text>
+        <text x="660" y="316" fill="#94a3b8" font-size="9" text-anchor="middle">basis_state inside A is attempted</text>
+        <text x="660" y="330" fill="#94a3b8" font-size="9" text-anchor="middle">Hadamard image spreads outside A⊥</text>
+        <text x="660" y="344" fill="#94a3b8" font-size="9" text-anchor="middle">verify(note) returns False</text>
+        <text x="660" y="362" fill="#fb7185" font-size="8" text-anchor="middle">tests cover this case</text>
+
+        <line x1="995" y1="189" x2="995" y2="230" stroke="#a78bfa" stroke-width="1.5"/>
+        <line x1="995" y1="230" x2="270" y2="230" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <line x1="995" y1="230" x2="660" y2="230" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+        <rect x="120" y="465" width="930" height="240" rx="12" fill="rgba(251,191,36,0.05)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="6,4"/>
+        <text x="138" y="485" fill="#fbbf24" font-size="10" font-weight="600">TLA+ abstraction of the oracle lifecycle</text>
+
+        <rect x="150" y="525" width="170" height="88" rx="8" fill="#0f172a"/>
+        <rect x="150" y="525" width="170" height="88" rx="8" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="235" y="549" fill="white" font-size="12" font-weight="600" text-anchor="middle">Mint(s)</text>
+        <text x="235" y="569" fill="#94a3b8" font-size="9" text-anchor="middle">issued' = issued ∪ {s}</text>
+        <text x="235" y="583" fill="#94a3b8" font-size="9" text-anchor="middle">publish subspace + dual oracles</text>
+        <text x="235" y="597" fill="#94a3b8" font-size="9" text-anchor="middle">state → authentic</text>
+
+        <rect x="355" y="525" width="170" height="88" rx="8" fill="#0f172a"/>
+        <rect x="355" y="525" width="170" height="88" rx="8" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="440" y="549" fill="white" font-size="12" font-weight="600" text-anchor="middle">QuerySubspaceOracle</text>
+        <text x="440" y="569" fill="#94a3b8" font-size="9" text-anchor="middle">append query record</text>
+        <text x="440" y="583" fill="#94a3b8" font-size="9" text-anchor="middle">kind = subspace</text>
+        <text x="440" y="597" fill="#94a3b8" font-size="9" text-anchor="middle">answer = abstract oracle rule</text>
+
+        <rect x="560" y="525" width="170" height="88" rx="8" fill="#0f172a"/>
+        <rect x="560" y="525" width="170" height="88" rx="8" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="645" y="549" fill="white" font-size="12" font-weight="600" text-anchor="middle">QueryDualOracle</text>
+        <text x="645" y="569" fill="#94a3b8" font-size="9" text-anchor="middle">append query record</text>
+        <text x="645" y="583" fill="#94a3b8" font-size="9" text-anchor="middle">kind = dual</text>
+        <text x="645" y="597" fill="#94a3b8" font-size="9" text-anchor="middle">same abstract answer rule</text>
+
+        <rect x="765" y="525" width="135" height="88" rx="8" fill="#0f172a"/>
+        <rect x="765" y="525" width="135" height="88" rx="8" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="833" y="549" fill="white" font-size="12" font-weight="600" text-anchor="middle">VerifyAuthentic</text>
+        <text x="833" y="569" fill="#94a3b8" font-size="9" text-anchor="middle">requires both</text>
+        <text x="833" y="583" fill="#94a3b8" font-size="9" text-anchor="middle">oracle tables</text>
+        <text x="833" y="597" fill="#34d399" font-size="9" text-anchor="middle">accept</text>
+
+        <rect x="935" y="525" width="135" height="88" rx="8" fill="#0f172a"/>
+        <rect x="935" y="525" width="135" height="88" rx="8" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="1002" y="549" fill="white" font-size="12" font-weight="600" text-anchor="middle">RejectCounterfeit</text>
+        <text x="1002" y="569" fill="#94a3b8" font-size="9" text-anchor="middle">requires both</text>
+        <text x="1002" y="583" fill="#94a3b8" font-size="9" text-anchor="middle">oracle tables</text>
+        <text x="1002" y="597" fill="#fb7185" font-size="9" text-anchor="middle">reject</text>
+
+        <line x1="322" y1="569" x2="353" y2="569" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <line x1="527" y1="569" x2="558" y2="569" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <line x1="732" y1="569" x2="763" y2="569" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <line x1="902" y1="569" x2="933" y2="569" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+        <rect x="205" y="640" width="760" height="42" rx="8" fill="#0f172a"/>
+        <rect x="205" y="640" width="760" height="42" rx="8" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="585" y="666" fill="white" font-size="11" font-weight="600" text-anchor="middle">Current oracle invariants proved by TLC</text>
+        <text x="585" y="681" fill="#94a3b8" font-size="8" text-anchor="middle">oracle tables match issued set • subspace/dual publication stay coupled • query log only references issued serials • answers follow abstract authentic/counterfeit rule</text>
+
+        <rect x="120" y="760" width="340" height="55" rx="8" fill="#0f172a"/>
+        <rect x="120" y="760" width="340" height="55" rx="8" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="290" y="783" fill="white" font-size="11" font-weight="600" text-anchor="middle">What is not modeled yet</text>
+        <text x="290" y="799" fill="#94a3b8" font-size="8" text-anchor="middle">real obfuscated oracles • amplitudes in TLA+ • adversary knowledge accumulation</text>
+
+        <rect x="515" y="760" width="340" height="55" rx="8" fill="#0f172a"/>
+        <rect x="515" y="760" width="340" height="55" rx="8" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="685" y="783" fill="white" font-size="11" font-weight="600" text-anchor="middle">Implemented symbolic check</text>
+        <text x="685" y="799" fill="#94a3b8" font-size="8" text-anchor="middle">Z3 now proves one-step inductive stability for selected oracle invariants across each transition</text>
+
+        <text x="960" y="736" fill="white" font-size="10" font-weight="600">Legend</text>
+        <rect x="960" y="748" width="16" height="10" rx="2" fill="rgba(6,78,59,0.4)" stroke="#34d399" stroke-width="1"/><text x="982" y="756" fill="#94a3b8" font-size="8">authentic / mint code path</text>
+        <rect x="960" y="764" width="16" height="10" rx="2" fill="rgba(136,19,55,0.4)" stroke="#fb7185" stroke-width="1"/><text x="982" y="772" fill="#94a3b8" font-size="8">counterfeit / reject path</text>
+        <rect x="960" y="780" width="16" height="10" rx="2" fill="rgba(8,51,68,0.4)" stroke="#22d3ee" stroke-width="1"/><text x="982" y="788" fill="#94a3b8" font-size="8">oracle-query actions</text>
+        <rect x="960" y="796" width="16" height="10" rx="2" fill="rgba(120,53,15,0.3)" stroke="#fbbf24" stroke-width="1"/><text x="982" y="804" fill="#94a3b8" font-size="8">formal transition stages</text>
+        <rect x="960" y="812" width="16" height="10" rx="2" fill="rgba(76,29,149,0.4)" stroke="#a78bfa" stroke-width="1"/><text x="982" y="820" fill="#94a3b8" font-size="8">proved invariants</text>
+      </svg>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-header"><div class="card-dot emerald"></div><h3>Code-level verifier</h3></div>
+        <ul>
+          <li>• The Python prototype checks support over A and Hadamard support over A⊥.</li>
+          <li>• This is a toy public-key verifier, not an obfuscated oracle construction.</li>
+          <li>• The note family is intentionally separated from the BB84/quorum baseline.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-dot rose"></div><h3>TLA+ oracle model</h3></div>
+        <ul>
+          <li>• The spec abstracts away amplitudes and only tracks lifecycle + oracle consistency.</li>
+          <li>• Query actions append typed records to an oracle query log.</li>
+          <li>• Acceptance/rejection requires the oracle tables to exist for that serial.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-dot amber"></div><h3>Inter-state stability target</h3></div>
+        <ul>
+          <li>• TLC already checks finite-state invariant preservation under bounded queries.</li>
+          <li>• Z3 now checks symbolic one-step stability per transition.</li>
+          <li>• The checker lives at `z3/check_oracle_invariants.py`.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer">QMoney • oracle-flow explanation for current hidden-subspace research track</p>
+  </div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import unittest
 from types import MethodType
 
-from qmoney_mps_quorum_demo import Ledger, QuorumNode, QuorumService
+from pkey_quorum import Ledger, QuorumNode, QuorumService
 
 
 class QuorumVerificationTests(unittest.TestCase):
