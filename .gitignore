@@ -8,6 +8,8 @@ __pycache__/
 
 # Node / frontend dependencies
 node_modules/
+website/dist/
+website/build/
 
 # TLA+ / TLC model-checking artifacts
 states/
