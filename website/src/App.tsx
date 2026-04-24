@@ -15,43 +15,10 @@ const principles = [
   },
 ]
 
-const distinctions = [
-  {
-    title: 'What QMoney is today',
-    body: 'A quorum-verified, private-key quantum cash system with a classical public-key settlement layer.',
-  },
-  {
-    title: 'What it is not yet',
-    body: 'It is not a finished public-key quantum money system where anyone can verify from public information without learning how to mint valid notes.',
-  },
-  {
-    title: 'Why that matters',
-    body: 'Private-key and public-key quantum money require different note families, different verifier models, and different security stories.',
-  },
-]
-
 const roadmap = [
   'Preserve the current private-key baseline as an honest reference architecture for transfer, remint, and counterfeit modeling.',
   'Explore separate public-key note families—starting with hidden-subspace prototypes—without pretending the BB84 baseline is already public-key.',
   'Keep new claims grounded with tests, lifecycle invariants, and symbolic checks so conceptual progress stays legible.',
-]
-
-const docs = [
-  {
-    title: 'Architecture note',
-    href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-vs-private-key-qmoney.md',
-    body: 'Why QMoney is currently private-key quantum cash rather than public-key quantum money.',
-  },
-  {
-    title: 'Quorum baseline',
-    href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/software-mps-quorum-design.md',
-    body: 'The software-only BB84 baseline, including quorum verification and verify-and-remint semantics.',
-  },
-  {
-    title: 'Hidden-subspace notes',
-    href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/hidden-subspace-notes.md',
-    body: 'The current research-only public-key verifier sketch and its documented limitations.',
-  },
 ]
 
 function App() {
@@ -65,9 +32,8 @@ function App() {
 
         <nav className="site-nav" aria-label="Primary navigation">
           <a href="#premise">Premise</a>
-          <a href="#distinction">Distinction</a>
-          <a href="#docs">Docs</a>
           <a href="#roadmap">Roadmap</a>
+          <a href="#contact">Join</a>
         </nav>
       </header>
 
@@ -87,8 +53,8 @@ function App() {
             <a className="button button-primary" href="#premise">
               Read the premise
             </a>
-            <a className="button button-secondary" href="#docs">
-              Open the docs
+            <a className="button button-secondary" href="#contact">
+              Join the journey
             </a>
           </div>
         </section>
@@ -132,12 +98,30 @@ function App() {
           </div>
         </section>
 
+        <section className="section" id="roadmap">
+          <div className="section-copy narrow">
+            <p className="section-kicker">Roadmap</p>
+          </div>
 
-  
+          <ol className="roadmap-list">
+            {roadmap.map((item, index) => (
+              <li className="roadmap-item" key={item}>
+                <span className="roadmap-index">0{index + 1}</span>
+                <p>{item}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
 
-
-
-
+        <section className="closing panel" id="contact">
+          <p className="section-kicker">Join the journey</p>
+          <h2>If quantum computing and Bitcoin both fascinate you, QMoney is an invitation to explore where they might meet.</h2>
+          <p>
+            We are building in public for people who care about cryptography, distributed systems,
+            quantum information, and the future of money. If that sounds like your kind of frontier,
+            come follow the work, think alongside it, and help shape what this experiment becomes.
+          </p>
+        </section>
       </main>
     </div>
   )
