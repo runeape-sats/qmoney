@@ -144,6 +144,7 @@ not near-term deployment of production quantum money.
 ### Research notes
 - [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md) — how Peter Shor’s arguments should shape QMoney’s architecture split, terminology, and public-key research boundaries.
 - [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md) — transcript-backed note on Aaronson’s private-key quantum money ideas, adaptive-query security, compact-secret tradeoffs, and why QMoney fits the distributed private-key lineage.
+- [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md) — evaluation of Molina–Vidick–Watrous (2012) for QMoney, including why the paper's one-note-to-two-notes counterfeiting model is a strong fit for the current private-key baseline.
 
 ---
 
@@ -161,6 +162,8 @@ The current simulator keeps the note family intentionally simple:
 - MPS-friendly scaling for larger software-only experiments
 
 This is a useful private-key baseline, not a claim of true public-key quantum money.
+
+A useful baseline attack model for this simulator family is the **simple one-note-to-two-notes counterfeiting attack** analyzed by Molina, Vidick, and Watrous (2012): given one valid note, what is the best probability of producing two notes that both pass verification? See [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md).
 
 ### Actual implementation sample
 
@@ -244,6 +247,7 @@ The repo should be read as having two tracks:
 - Wiesner, S. (1983). *Conjugate coding*. SIGACT News, 15(1), 78–88. (Written in the late 1960s; foundational private-key quantum money idea.)
 - Wootters, W. K., & Zurek, W. H. (1982). *A single quantum cannot be cloned*. Nature, 299(5886), 802–803.
 - Aaronson, S., & Christiano, P. (2012). *Quantum Money from Hidden Subspaces*. https://www.scottaaronson.com/papers/moneyfull.pdf
+- Molina, A., Vidick, T., & Watrous, J. (2012). *Optimal counterfeiting attacks and generalizations for Wiesner's quantum money*. https://arxiv.org/abs/1202.4010
 
 ## Additional references
 - Scott Aaronson, *Stephen Wiesner (1942-2021)*: https://scottaaronson.blog/?p=5730
