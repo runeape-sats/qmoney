@@ -6,6 +6,9 @@ __pycache__/
 .venv/
 .tools/
 
+# Node / frontend dependencies
+node_modules/
+
 # TLA+ / TLC model-checking artifacts
 states/
 metadir/
