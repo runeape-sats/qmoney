@@ -46,12 +46,6 @@ That means:
 - the system-level circulation model is **distributed and Bitcoin-inspired**
 - the public-facing part is the **classical ledger/attestation layer**, not a public quantum verifier
 
----
-
-## Why this framing matters
-
-The research in this repo is organized around a distinction that Shor and Aaronson both make clear:
-
 ### Private-key quantum money / cash
 - valid verification depends on hidden note information
 - verifier interaction is a major attack surface
