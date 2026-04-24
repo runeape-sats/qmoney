@@ -14,6 +14,22 @@ The current repo does **not** implement true public-key quantum money. It implem
 
 ---
 
+## Historical background
+
+Scott Aaronson's memorial post on [Stephen Wiesner](https://scottaaronson.blog/?p=5730) is a useful reminder that quantum money began as a strangely early idea, not as a late product of the modern quantum-computing boom.
+
+A few historical stories matter for how QMoney frames itself:
+
+- **Wiesner wrote the core idea in the late 1960s.** His *Conjugate Coding* manuscript already treated quantum states as useful for cryptographic tasks that are impossible classically.
+- **The paper was not celebrated immediately.** As Aaronson recounts, the manuscript was rejected once, then shelved for years before finally appearing in 1983. Quantum money started as an idea that sounded too early, too weird, and too far ahead of the surrounding field.
+- **No-cloning was part of the original intuition before it was formalized.** Wiesner used the impossibility of copying unknown quantum states as obvious background well before the no-cloning theorem was named and published in 1982.
+- **The line from Wiesner to BB84 is direct.** Bennett and Brassard later transformed related ideas into quantum key distribution, and the modern field of quantum cryptography grew partly out of that same conceptual seed.
+- **Private-key quantum money came first.** Wiesner's banknote scheme relied on hidden verification data held by the issuing bank, which is exactly why QMoney is careful to distinguish its current private-key baseline from future public-key ambitions.
+
+That history matters because it shows that quantum money was never just about a flashy quantum token. From the beginning, it was about what uniquely quantum information lets you do: create states that are easy to verify with the right hidden information but fundamentally hard to copy.
+
+---
+
 ## What QMoney currently is
 
 QMoney today is best described as:
@@ -236,5 +252,6 @@ The repo should be read as having two tracks:
 - Aaronson, S., & Christiano, P. (2012). *Quantum Money from Hidden Subspaces*. https://www.scottaaronson.com/papers/moneyfull.pdf
 
 ## Additional references
+- Scott Aaronson, *Stephen Wiesner (1942-2021)*: https://scottaaronson.blog/?p=5730
 - Peter Shor seminar transcript notes in this repo: [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md)
 - Scott Aaronson seminar transcript notes in this repo: [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md)
