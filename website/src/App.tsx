@@ -39,8 +39,8 @@ function App() {
 
       <main id="top">
         <section className="hero">
-          <p className="eyebrow">Quantum Money research</p>
-          <h1>Unclonable quantum notes meets distributed settlement architecture</h1>
+          <p className="eyebrow">Quantum Computing + Bitcoin research</p>
+          <h1>QMoney: A Peer-to-Peer Quantum Money System</h1>
           <p className="lede">
             The core idea is to use <strong>no-cloning</strong> for the quantum anti-counterfeiting
             layer, then use a <strong>Bitcoin-like classical settlement layer</strong> for ownership
