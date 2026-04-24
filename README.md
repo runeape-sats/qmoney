@@ -30,9 +30,9 @@ That history matters because it shows that quantum money was never just about a 
 
 ---
 
-## What QMoney currently is
+## QMoney is currently work-in-progress
 
-QMoney today is best described as:
+QMoney (inspired by Bitcoin and quantum money research) can be best described as:
 
 - **private-key quantum cash** at the quantum layer
 - **quorum-verified** rather than universally self-verifiable
