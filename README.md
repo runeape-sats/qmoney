@@ -1,10 +1,10 @@
-# QMoney
+# QMoney: A Peer-to-Peer Quantum Money System
 
 QMoney is a research repo for **distributed private-key quantum cash** inspired by:
 
 - **[Stephen Wiesner](https://scottaaronson.blog/?p=5730) / [Peter Shor](https://math.mit.edu/~shor/)'s quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
-- **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf) private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
-- **[Satoshi Nakamoto](https://bitcoin.org/bitcoin.pdf) Bitcoin**: public ownership, signed transfer intent, distributed validation, and ledger finality
+- **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf)'s private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
+- **[Satoshi Nakamoto](https://bitcoin.org/bitcoin.pdf)'s Bitcoin**: public ownership, signed transfer intent, distributed validation, and ledger finality
 
 The core idea:
 
