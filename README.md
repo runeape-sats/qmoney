@@ -2,11 +2,11 @@
 
 QMoney is a research repo for **distributed private-key quantum cash** inspired by:
 
-- **Wiesner / Shor quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
-- **Aaronson / Christiano private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
-- **Bitcoin-style system design**: public ownership, signed transfer intent, distributed validation, and ledger finality
+- **[Stephen Wiesner](https://scottaaronson.blog/?p=5730) / [Peter Shor](https://math.mit.edu/~shor/)'s quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
+- **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf) private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
+- **[Satoshi Nakamoto](https://bitcoin.org/bitcoin.pdf) Bitcoin**: public ownership, signed transfer intent, distributed validation, and ledger finality
 
-The core idea is simple:
+The core idea:
 
 > use **no-cloning** for the quantum anti-counterfeiting layer, and use a **Bitcoin-like classical settlement layer** for ownership transfer, attestations, and spent-state tracking.
 
@@ -86,7 +86,7 @@ This is closer to **distributed private-key quantum cash** than to a self-verify
 
 ---
 
-## Why Bitcoin is relevant here
+## Bitcoin system architecture
 
 Bitcoin matters to QMoney not because Bitcoin already solves quantum money, but because it contributes the **system architecture**:
 
@@ -234,5 +234,7 @@ The repo should be read as having two tracks:
 - Wiesner, S. (1983). *Conjugate coding*. SIGACT News, 15(1), 78–88. (Written in the late 1960s; foundational private-key quantum money idea.)
 - Wootters, W. K., & Zurek, W. H. (1982). *A single quantum cannot be cloned*. Nature, 299(5886), 802–803.
 - Aaronson, S., & Christiano, P. (2012). *Quantum Money from Hidden Subspaces*. https://www.scottaaronson.com/papers/moneyfull.pdf
-- Shor seminar note in this repo: [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md)
-- Aaronson transcript-backed note in this repo: [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md)
+
+## Additional references
+- Peter Shor seminar transcript notes in this repo: [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md)
+- Scott Aaronson seminar transcript notes in this repo: [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md)
