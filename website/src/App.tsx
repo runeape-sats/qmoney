@@ -64,6 +64,11 @@ const currentReferences = [
         href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/wiesner-counterfeiting-attacks-and-qmoney.md',
         description: 'Why one-note-to-two-notes counterfeiting attacks are a strong fit for the current private-key baseline.',
       },
+      {
+        title: 'Ekert quantum cryptography and QMoney',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/ekert-quantum-cryptography-and-qmoney.md',
+        description: 'Review of Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and what Ekert’s cryptography ideas imply for QMoney.',
+      },
     ],
   },
 ]
