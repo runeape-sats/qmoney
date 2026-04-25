@@ -25,4 +25,17 @@ describe('App', () => {
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
     expect(screen.getByRole('button', { name: /switch to light mode/i })).toBeInTheDocument()
   })
+
+  it('surfaces intro, history, and current references from the readme', () => {
+    render(<App />)
+
+    expect(screen.getAllByText(/work-in-progress research repo for distributed private-key quantum cash/i).length).toBeGreaterThan(0)
+    expect(screen.getByRole('heading', { name: /historical background/i })).toBeInTheDocument()
+    expect(screen.getByText(/wiesner wrote the core idea in the late 1960s/i)).toBeInTheDocument()
+    expect(screen.getByText(/these are the current architecture and research references highlighted in the readme/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /public vs private key qmoney/i })).toHaveAttribute(
+      'href',
+      'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-vs-private-key-qmoney.md',
+    )
+  })
 })

@@ -181,6 +181,10 @@
   margin: 24px 0 0;
 }
 
+.lede-secondary {
+  margin-top: 14px;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -365,6 +369,50 @@
   margin-top: 72px;
 }
 
+.warning-panel,
+.reference-panel {
+  margin-top: 12px;
+}
+
+.reference-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.reference-list {
+  display: grid;
+  gap: 14px;
+}
+
+.reference-link {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 72%, var(--surface-strong) 28%);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 140ms ease,
+    background-color 140ms ease;
+}
+
+.reference-link:hover {
+  transform: translateY(-1px);
+}
+
+.reference-title {
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.reference-description {
+  color: var(--text-body);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
 .closing h2 {
   max-width: 18ch;
 }
@@ -382,7 +430,8 @@
   }
 
   .architecture-grid,
-  .stats {
+  .stats,
+  .reference-groups {
     grid-template-columns: 1fr;
   }
 

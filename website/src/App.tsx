@@ -2,25 +2,70 @@ import { useEffect, useState } from 'react'
 import qmoneyLogo from './assets/qmoney-logo.svg'
 import './App.css'
 
-const principles = [
+const introPoints = [
   {
-    title: 'No-cloning is the anti-counterfeiting primitive',
-    body: 'QMoney uses unclonable quantum states for the note layer, rather than relying only on classical signatures or serial numbers.',
+    title: 'Distributed private-key quantum cash',
+    body: 'QMoney is a work-in-progress research repo for distributed private-key quantum cash, not a finished public-key quantum money system.',
   },
   {
-    title: 'Verification is consumptive',
-    body: 'A valid note is measured, consumed, and replaced. The system is designed around verify-and-remint rather than endless rechecking of the same token.',
+    title: 'Quantum anti-counterfeiting + classical settlement',
+    body: 'The design uses no-cloning for the note layer and a Bitcoin-inspired classical layer for ownership transfer, attestations, and spent-state tracking.',
   },
   {
-    title: 'Settlement is classical and distributed',
-    body: 'Ownership, transfer intent, attestations, and spent-state tracking are handled by a public-key ledger layer inspired by Bitcoin-style system design.',
+    title: 'Verify-and-remint baseline',
+    body: 'The current baseline is quorum-verified, private-key quantum cash with verify-and-remint semantics rather than a forever-reusable self-verifying note.',
   },
 ]
 
-const roadmap = [
-  'Preserve the current private-key baseline as an honest reference architecture for transfer, remint, and counterfeit modeling.',
-  'Explore separate public-key note families—starting with hidden-subspace prototypes—without pretending the BB84 baseline is already public-key.',
-  'Keep new claims grounded with tests, lifecycle invariants, and symbolic checks so conceptual progress stays legible.',
+const historyPoints = [
+  'Wiesner wrote the core idea in the late 1960s, long before quantum money became a mainstream research topic.',
+  'The original manuscript was rejected and shelved for years before finally appearing in 1983, which makes quantum money one of the field’s earliest “too early” ideas.',
+  'No-cloning was already part of Wiesner’s cryptographic intuition before the no-cloning theorem was formally published in 1982.',
+  'The line from Wiesner to BB84 is direct: the same conceptual seed helped launch modern quantum cryptography.',
+  'Private-key quantum money came first, which is why QMoney keeps today’s private-key baseline clearly separate from future public-key ambitions.',
+]
+
+const currentReferences = [
+  {
+    category: 'Architecture',
+    items: [
+      {
+        title: 'Public vs private key QMoney',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-vs-private-key-qmoney.md',
+        description: 'Canonical statement of why the current repo is private-key quantum cash rather than public-key quantum money.',
+      },
+      {
+        title: 'Software MPS quorum design',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/software-mps-quorum-design.md',
+        description: 'Technical appendix for the current software-only MPS/quorum baseline and protocol flow.',
+      },
+      {
+        title: 'Public-key implementation workflow',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-key-implementation-workflow.md',
+        description: 'Implementation source of truth for the future public-key/oracle track.',
+      },
+    ],
+  },
+  {
+    category: 'Research',
+    items: [
+      {
+        title: 'Latest quantum money literature and QMoney',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/latest-quantum-money-literature-and-qmoney.md',
+        description: 'Survey of the most relevant recent literature for QMoney’s architecture and research direction.',
+      },
+      {
+        title: 'Quantum money literature roadmap',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/quantum-money-literature-roadmap.md',
+        description: 'Ranked reading and prototyping roadmap for what QMoney should study, build, monitor, and avoid next.',
+      },
+      {
+        title: 'Wiesner counterfeiting attacks and QMoney',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/wiesner-counterfeiting-attacks-and-qmoney.md',
+        description: 'Why one-note-to-two-notes counterfeiting attacks are a strong fit for the current private-key baseline.',
+      },
+    ],
+  },
 ]
 
 type Theme = 'light' | 'dark'
@@ -102,8 +147,9 @@ function App() {
 
         <div className="header-controls">
           <nav className="site-nav" aria-label="Primary navigation">
-            <a href="#premise">Premise</a>
-            <a href="#roadmap">Roadmap</a>
+            <a href="#intro">Intro</a>
+            <a href="#history">History</a>
+            <a href="#references">References</a>
             <a href="#contact">Join</a>
           </nav>
 
@@ -136,19 +182,23 @@ function App() {
           <p className="eyebrow">Quantum Computing + Bitcoin research</p>
           <h1>QMoney: A Peer-to-Peer Quantum Money System</h1>
           <p className="lede">
-            The core idea is to use <strong>no-cloning</strong> for the quantum anti-counterfeiting
-            layer, then use a <strong>Bitcoin-like classical settlement layer</strong> for ownership
-            transfer, attestations, and spent-state tracking. The current system is best understood
-            as <strong>quorum-verified private-key quantum cash</strong> with
+            Quantum money has been around since the late 1960s, and QMoney revisits that line of
+            thought as a <strong>work-in-progress research repo for distributed private-key quantum cash</strong>.
+            The goal is to pair a uniquely quantum anti-counterfeiting layer with a Bitcoin-inspired
+            classical settlement layer.
+          </p>
+          <p className="lede lede-secondary">
+            The current repo does <strong>not</strong> yet implement true public-key quantum money. Today it
+            is best understood as <strong>quorum-verified private-key quantum cash</strong> with
             <strong> verify-and-remint</strong> semantics.
           </p>
 
           <div className="hero-actions">
-            <a className="button button-primary" href="#premise">
-              Read the premise
+            <a className="button button-primary" href="#intro">
+              Read the intro
             </a>
-            <a className="button button-secondary" href="#contact">
-              Join the journey
+            <a className="button button-secondary" href="#references">
+              Browse references
             </a>
             <a
               className="button button-secondary button-github"
@@ -162,58 +212,76 @@ function App() {
           </div>
         </section>
 
-        <section className="stats" aria-label="QMoney highlights">
-          <article>
-            <span className="stat-value">2</span>
-            <span className="stat-label">layers: quantum note validity and classical settlement</span>
-          </article>
-          <article>
-            <span className="stat-value">1</span>
-            <span className="stat-label">core transfer model: verify, consume, then remint</span>
-          </article>
-          <article>
-            <span className="stat-value">11</span>
-            <span className="stat-label">current tests covering runtime behavior and oracle invariants</span>
-          </article>
-        </section>
-
-        <section className="section" id="premise">
+        <section className="section" id="intro">
           <div className="section-copy">
-            <p className="section-kicker">Premise</p>
-            <h2>Quantum and classical layers do different jobs.</h2>
+            <p className="section-kicker">Intro</p>
             <p className="section-body">
-              The quantum note layer is where anti-counterfeiting lives: BB84-style notes,
-              hidden verification data, and consumptive verification. The classical layer is where
-              circulation lives: owner keys, signed transfer intent, quorum attestations, and
-              spent-state tracking. Classical public-key cryptography helps coordinate settlement,
-              but it does not turn the note family into public-key quantum money.
+              QMoney combines <strong>no-cloning</strong> at the quantum note layer with a
+              <strong> Bitcoin-like classical settlement layer</strong> for ownership transfer,
+              attestations, and spent-state tracking. It is intentionally honest about the split
+              between the current private-key baseline and future public-key ambitions.
             </p>
           </div>
 
           <div className="architecture-grid">
-            {principles.map((item, index) => (
+            {introPoints.map((item, index) => (
               <article className={`panel${index === 0 ? ' panel-strong' : ''}`} key={item.title}>
-                <p className="panel-label">Core idea</p>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
               </article>
             ))}
           </div>
+
+          <article className="panel warning-panel">
+            <p className="panel-label">Current status</p>
+            <h3>QMoney is still work-in-progress. There is no crypto token.</h3>
+            <p>
+              Near-term value in this repo is conceptual clarity, simulator design, attack modeling,
+              note-family comparison, and architecture documentation—not near-term production deployment.
+            </p>
+          </article>
         </section>
 
-        <section className="section" id="roadmap">
+        <section className="section" id="history">
           <div className="section-copy narrow">
-            <p className="section-kicker">Roadmap</p>
+            <p className="section-kicker">History</p>
+            <h2>Historical background</h2>
           </div>
 
-          <ol className="roadmap-list">
-            {roadmap.map((item, index) => (
+          <ol className="roadmap-list history-list">
+            {historyPoints.map((item, index) => (
               <li className="roadmap-item" key={item}>
                 <span className="roadmap-index">0{index + 1}</span>
                 <p>{item}</p>
               </li>
             ))}
           </ol>
+        </section>
+
+        <section className="section" id="references">
+          <div className="section-copy">
+            <p className="section-kicker">References</p>
+            <p className="section-body">
+              These are the current architecture and research references highlighted in the README as
+              the best entry points for understanding where QMoney stands today.
+            </p>
+          </div>
+
+          <div className="reference-groups">
+            {currentReferences.map((group) => (
+              <article className="panel reference-panel" key={group.category}>
+                <p className="panel-label">{group.category}</p>
+                <div className="reference-list">
+                  {group.items.map((item) => (
+                    <a className="reference-link" href={item.href} key={item.href} target="_blank" rel="noreferrer">
+                      <span className="reference-title">{item.title}</span>
+                      <span className="reference-description">{item.description}</span>
+                    </a>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="closing panel" id="contact">
