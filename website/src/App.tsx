@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import qmoneyLogo from './assets/qmoney-logo.svg'
 import './App.css'
 
 const principles = [
@@ -21,20 +23,112 @@ const roadmap = [
   'Keep new claims grounded with tests, lifecycle invariants, and symbolic checks so conceptual progress stays legible.',
 ]
 
+type Theme = 'light' | 'dark'
+
+const getInitialTheme = (): Theme => {
+  if (typeof window === 'undefined') {
+    return 'light'
+  }
+
+  const storedTheme = window.localStorage.getItem('qmoney-theme')
+  if (storedTheme === 'light' || storedTheme === 'dark') {
+    return storedTheme
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+function ThemeIcon({ theme }: { theme: Theme }) {
+  if (theme === 'dark') {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="icon theme-icon">
+        <path
+          d="M21 12.8A9 9 0 1 1 11.2 3a7.2 7.2 0 0 0 9.8 9.8Z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </svg>
+    )
+  }
+
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon theme-icon">
+      <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9 5.3 5.3"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  )
+}
+
+function GithubIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon github-icon">
+      <path
+        d="M12 2C6.48 2 2 6.58 2 12.22c0 4.51 2.87 8.34 6.84 9.69.5.1.68-.22.68-.5 0-.24-.01-1.04-.02-1.88-2.78.62-3.37-1.21-3.37-1.21-.46-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.05 1.53 1.05.9 1.57 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.15-4.56-5.09 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.31.1-2.74 0 0 .84-.28 2.75 1.05A9.36 9.36 0 0 1 12 6.84a9.3 9.3 0 0 1 2.5.35c1.9-1.33 2.74-1.05 2.74-1.05.55 1.43.2 2.48.1 2.74.64.71 1.03 1.62 1.03 2.74 0 3.95-2.34 4.83-4.58 5.08.36.32.68.95.68 1.92 0 1.38-.01 2.49-.01 2.83 0 .28.18.61.69.5A10.23 10.23 0 0 0 22 12.22C22 6.58 17.52 2 12 2Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
 function App() {
+  const [theme, setTheme] = useState<Theme>(getInitialTheme)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    document.documentElement.style.colorScheme = theme
+    window.localStorage.setItem('qmoney-theme', theme)
+  }, [theme])
+
+  const nextTheme = theme === 'light' ? 'dark' : 'light'
+
   return (
     <div className="page">
       <header className="site-header">
         <a className="brand" href="#top" aria-label="QMoney home">
-          <span className="brand-mark">Q</span>
+          <span className="brand-mark">
+            <img src={qmoneyLogo} alt="QMoney logo" className="brand-logo" />
+          </span>
           <span>QMoney</span>
         </a>
 
-        <nav className="site-nav" aria-label="Primary navigation">
-          <a href="#premise">Premise</a>
-          <a href="#roadmap">Roadmap</a>
-          <a href="#contact">Join</a>
-        </nav>
+        <div className="header-controls">
+          <nav className="site-nav" aria-label="Primary navigation">
+            <a href="#premise">Premise</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#contact">Join</a>
+          </nav>
+
+          <div className="header-actions">
+            <a
+              className="icon-link"
+              href="https://github.com/runeape-sats/qmoney"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+            >
+              <GithubIcon />
+              <span>GitHub</span>
+            </a>
+
+            <button
+              type="button"
+              className="icon-button"
+              aria-label={`Switch to ${nextTheme} mode`}
+              onClick={() => setTheme(nextTheme)}
+            >
+              <ThemeIcon theme={theme} />
+            </button>
+          </div>
+        </div>
       </header>
 
       <main id="top">
@@ -55,6 +149,15 @@ function App() {
             </a>
             <a className="button button-secondary" href="#contact">
               Join the journey
+            </a>
+            <a
+              className="button button-secondary button-github"
+              href="https://github.com/runeape-sats/qmoney"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <GithubIcon />
+              <span>View on GitHub</span>
             </a>
           </div>
         </section>
