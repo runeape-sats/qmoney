@@ -157,7 +157,8 @@ function App() {
   }, [])
 
   const nextTheme = theme === 'light' ? 'dark' : 'light'
-  const mobileMenuLabel = isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+  const menuLabel = isMobileMenuOpen ? 'Close site menu' : 'Open site menu'
+  const handleMenuToggle = () => setIsMobileMenuOpen((open) => !open)
   const handleMobileNavClick = () => setIsMobileMenuOpen(false)
 
   return (
@@ -171,82 +172,54 @@ function App() {
             <span>QMoney</span>
           </a>
 
-          <div className="header-actions header-actions-desktop">
-            <a
-              className="icon-link"
-              href="https://github.com/runeape-sats/qmoney"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-            >
-              <GithubIcon />
-              <span>GitHub</span>
-            </a>
-
-            <button
-              type="button"
-              className="icon-button"
-              aria-label={`Switch to ${nextTheme} mode`}
-              onClick={() => setTheme(nextTheme)}
-            >
-              <ThemeIcon theme={theme} />
-            </button>
-
-            <button
-              type="button"
-              className="icon-button mobile-menu-button"
-              aria-label={mobileMenuLabel}
-              aria-controls="mobile-navigation"
-              aria-expanded={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen((open) => !open)}
-            >
-              <MenuIcon open={isMobileMenuOpen} />
-            </button>
-          </div>
-        </div>
-
-        <div className="header-controls">
-          <nav className="site-nav" aria-label="Primary navigation">
-            <a href="#intro">Intro</a>
-            <a href="#history">History</a>
-            <a href="#references">References</a>
-            <a href="#contact">Join</a>
-          </nav>
+          <button
+            type="button"
+            className="icon-button menu-toggle-button"
+            aria-label={menuLabel}
+            aria-controls="site-navigation-panel"
+            aria-expanded={isMobileMenuOpen}
+            onClick={handleMenuToggle}
+          >
+            <MenuIcon open={isMobileMenuOpen} />
+          </button>
         </div>
 
         <div
-          id="mobile-navigation"
-          className="mobile-menu"
+          id="site-navigation-panel"
+          className="header-panel"
           role="region"
-          aria-label="Mobile navigation"
+          aria-label="Site navigation panel"
           hidden={!isMobileMenuOpen}
         >
-          <nav className="mobile-nav-links" aria-label="Mobile navigation links">
-            <a href="#intro" onClick={handleMobileNavClick}>Intro</a>
-            <a href="#history" onClick={handleMobileNavClick}>History</a>
-            <a href="#references" onClick={handleMobileNavClick}>References</a>
-            <a href="#contact" onClick={handleMobileNavClick}>Join</a>
-          </nav>
+          <div className="header-controls">
+            <nav className="site-nav" aria-label="Primary navigation">
+              <a href="#intro" onClick={handleMobileNavClick}>Intro</a>
+              <a href="#history" onClick={handleMobileNavClick}>History</a>
+              <a href="#references" onClick={handleMobileNavClick}>References</a>
+              <a href="#contact" onClick={handleMobileNavClick}>Join</a>
+            </nav>
 
-          <div className="mobile-menu-actions">
-            <a
-              className="icon-link mobile-github-link"
-              href="https://github.com/runeape-sats/qmoney"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GithubIcon />
-              <span>GitHub</span>
-            </a>
+            <div className="header-actions">
+              <a
+                className="icon-link"
+                href="https://github.com/runeape-sats/qmoney"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+              >
+                <GithubIcon />
+                <span>GitHub</span>
+              </a>
 
-            <button
-              type="button"
-              className="icon-button"
-              aria-label={`Switch to ${nextTheme} mode`}
-              onClick={() => setTheme(nextTheme)}
-            >
-              <ThemeIcon theme={theme} />
-            </button>
+              <button
+                type="button"
+                className="icon-button"
+                aria-label={`Switch to ${nextTheme} mode`}
+                onClick={() => setTheme(nextTheme)}
+              >
+                <ThemeIcon theme={theme} />
+              </button>
+            </div>
           </div>
         </div>
       </header>
