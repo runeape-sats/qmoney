@@ -13,6 +13,12 @@
   color-scheme: light;
 }
 
+:root[data-theme='dark'] {
+  color: #ccd5e1;
+  background: #0d1117;
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -24,7 +30,11 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background: #ffffff;
+  background: var(--page-bg, #ffffff);
+  color: var(--text-body, #4d4d4d);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
 }
 
 a {

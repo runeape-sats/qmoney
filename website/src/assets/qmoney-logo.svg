@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4096 4096">
+  
+  <g transform="matrix(25 0 0 25 520 500)" fill="#FEFFFE">
+    <circle cx="70.7" cy="66.8" r="2.5"/>
+    <circle cx="30.7" cy="26.8" r="2.5"/>
+    <circle cx="30.7" cy="36.8" r="2.5"/>
+    <circle cx="90.7" cy="36.8" r="2.5"/>
+    <circle cx="30.7" cy="96.8" r="2.5"/>
+    <circle cx="40.7" cy="26.8" r="2.5"/>
+    <circle cx="30.7" cy="46.8" r="2.5"/>
+    <circle cx="90.7" cy="46.8" r="2.5"/>
+    <circle cx="40.7" cy="96.8" r="2.5"/>
+    <circle cx="50.7" cy="26.8" r="2.5"/>
+    <circle cx="30.7" cy="56.8" r="2.5"/>
+    <circle cx="90.7" cy="56.8" r="2.5"/>
+    <circle cx="50.7" cy="96.8" r="2.5"/>
+    <circle cx="60.7" cy="26.8" r="2.5"/>
+    <circle cx="30.7" cy="66.8" r="2.5"/>
+    <circle cx="90.7" cy="66.8" r="2.5"/>
+    <circle cx="60.7" cy="96.8" r="2.5"/>
+    <circle cx="70.7" cy="26.8" r="2.5"/>
+    <circle cx="30.7" cy="76.8" r="2.5"/>
+    <circle cx="90.7" cy="76.8" r="2.5"/>
+    <circle cx="70.7" cy="96.8" r="2.5"/>
+    <circle cx="80.7" cy="26.8" r="2.5"/>
+    <circle cx="30.7" cy="86.8" r="2.5"/>
+    <circle cx="90.7" cy="86.8" r="2.5"/>
+    <circle cx="80.7" cy="96.8" r="2.5"/>
+    <circle cx="90.7" cy="26.8" r="2.5"/>
+    <circle cx="30.7" cy="96.8" r="2.5"/>
+    <circle cx="90.7" cy="96.8" r="2.5"/>
+    <circle cx="90.7" cy="96.8" r="2.5"/>
+  </g>
+  <g transform="matrix(25 0 0 25 520 500)" fill="#FEFFFE">
+    <circle cx="80.7" cy="66.8" r="2.5">
+      <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0,0; 0,5; 0,10; 0,5; 0,0" keyTimes="0; 0.25; 0.5; 0.75; 1" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines=".42 0 .58 1; .42 0 .58 1; .42 0 .58 1; .42 0 .58 1"/>
+    </circle>
+  </g>
+</svg>
