@@ -484,7 +484,7 @@
 
 @media (max-width: 720px) {
   .page {
-    width: min(100%, calc(100% - 20px));
+    width: min(100%, calc(100% - 32px));
     padding-top: 12px;
   }
 
@@ -530,7 +530,12 @@
   }
 
   .hero {
-    padding: 32px 0 30px;
+    padding: 32px 4px 30px;
+  }
+
+  .section-copy,
+  .closing {
+    padding-inline: 4px;
   }
 
   .hero h1 {
@@ -570,7 +575,7 @@
 
 @media (max-width: 480px) {
   .page {
-    width: min(100%, calc(100% - 16px));
+    width: min(100%, calc(100% - 24px));
   }
 
   .header-top-row {
