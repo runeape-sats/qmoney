@@ -124,8 +124,25 @@ function GithubIcon() {
   )
 }
 
+function MenuIcon({ open }: { open: boolean }) {
+  if (open) {
+    return (
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="icon menu-icon">
+        <path d="M6 6 18 18M18 6 6 18" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon menu-icon">
+      <path d="M4 7.5h16M4 12h16M4 16.5h16" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+    </svg>
+  )
+}
+
 function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -133,17 +150,60 @@ function App() {
     window.localStorage.setItem('qmoney-theme', theme)
   }, [theme])
 
+  useEffect(() => {
+    const closeMenu = () => setIsMobileMenuOpen(false)
+    window.addEventListener('resize', closeMenu)
+    return () => window.removeEventListener('resize', closeMenu)
+  }, [])
+
   const nextTheme = theme === 'light' ? 'dark' : 'light'
+  const mobileMenuLabel = isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+  const handleMobileNavClick = () => setIsMobileMenuOpen(false)
 
   return (
     <div className="page">
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="QMoney home">
-          <span className="brand-mark">
-            <img src={qmoneyLogo} alt="QMoney logo" className="brand-logo" />
-          </span>
-          <span>QMoney</span>
-        </a>
+        <div className="header-top-row">
+          <a className="brand" href="#top" aria-label="QMoney home">
+            <span className="brand-mark">
+              <img src={qmoneyLogo} alt="QMoney logo" className="brand-logo" />
+            </span>
+            <span>QMoney</span>
+          </a>
+
+          <div className="header-actions header-actions-desktop">
+            <a
+              className="icon-link"
+              href="https://github.com/runeape-sats/qmoney"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+            >
+              <GithubIcon />
+              <span>GitHub</span>
+            </a>
+
+            <button
+              type="button"
+              className="icon-button"
+              aria-label={`Switch to ${nextTheme} mode`}
+              onClick={() => setTheme(nextTheme)}
+            >
+              <ThemeIcon theme={theme} />
+            </button>
+
+            <button
+              type="button"
+              className="icon-button mobile-menu-button"
+              aria-label={mobileMenuLabel}
+              aria-controls="mobile-navigation"
+              aria-expanded={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+            >
+              <MenuIcon open={isMobileMenuOpen} />
+            </button>
+          </div>
+        </div>
 
         <div className="header-controls">
           <nav className="site-nav" aria-label="Primary navigation">
@@ -152,14 +212,28 @@ function App() {
             <a href="#references">References</a>
             <a href="#contact">Join</a>
           </nav>
+        </div>
 
-          <div className="header-actions">
+        <div
+          id="mobile-navigation"
+          className="mobile-menu"
+          role="region"
+          aria-label="Mobile navigation"
+          hidden={!isMobileMenuOpen}
+        >
+          <nav className="mobile-nav-links" aria-label="Mobile navigation links">
+            <a href="#intro" onClick={handleMobileNavClick}>Intro</a>
+            <a href="#history" onClick={handleMobileNavClick}>History</a>
+            <a href="#references" onClick={handleMobileNavClick}>References</a>
+            <a href="#contact" onClick={handleMobileNavClick}>Join</a>
+          </nav>
+
+          <div className="mobile-menu-actions">
             <a
-              className="icon-link"
+              className="icon-link mobile-github-link"
               href="https://github.com/runeape-sats/qmoney"
               target="_blank"
               rel="noreferrer"
-              aria-label="GitHub"
             >
               <GithubIcon />
               <span>GitHub</span>
