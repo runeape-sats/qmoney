@@ -1,22 +1,25 @@
 # QMoney: A Peer-to-Peer Quantum Money System
 
-QMoney is a research repo for **distributed private-key quantum cash** inspired by:
+The idea of quantum money has been around since the 70s-80s. It is the right time to revisit and turn it into an alternative form of freedom money. Ideally, QMoney (quantum money implementation suggested here) serves like the other side of Bitcoin (i.e., yin and yang). As Bitcoin security being weaker compared to current quantum computing technology development, QMoney becomes stronger because it is more feasible to implement QMoney as more logical qubits are avaiable to daily users.
+
+QMoney is a _work-in-progress_ research repo for "distributed private-key quantum cash" inspired by:
 
 - **[Stephen Wiesner](https://scottaaronson.blog/?p=5730) / [Peter Shor](https://math.mit.edu/~shor/)'s quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
 - **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf)'s private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
 - **[Satoshi Nakamoto](https://bitcoin.org/bitcoin.pdf)'s Bitcoin**: public ownership, signed transfer intent, distributed validation, and ledger finality
+- and more...(to be added here).
 
 The core idea:
 
 > use **no-cloning** for the quantum anti-counterfeiting layer, and use a **Bitcoin-like classical settlement layer** for ownership transfer, attestations, and spent-state tracking.
 
-The current repo does **not** implement true public-key quantum money. It implements a **quorum-verified, private-key quantum cash** model with **verify-and-remint** semantics.
+The current repo does **not** yet implement true public-key quantum money. It implements a **quorum-verified, private-key quantum cash** model with **verify-and-remint** semantics.
 
 ---
 
 ## Historical background
 
-Scott Aaronson's memorial post on [Stephen Wiesner](https://scottaaronson.blog/?p=5730) is a useful reminder that quantum money began as a strangely early idea, not as a late product of the modern quantum-computing boom.
+Scott Aaronson's memorial post on [Stephen Wiesner](https://scottaaronson.blog/?p=5730) is an important reminder that "quantum money" began as a strangely early idea, not as a late product of the modern quantum-computing boom.
 
 A few historical stories matter for how QMoney frames itself:
 
@@ -30,7 +33,7 @@ That history matters because it shows that quantum money was never just about a 
 
 ---
 
-## QMoney is currently work-in-progress
+## QMoney is currently work-in-progress. THERE IS NO CRYPTO TOKENS!!
 
 QMoney (inspired by Bitcoin and quantum money research) can be best described as:
 
@@ -98,8 +101,6 @@ This is closer to **distributed private-key quantum cash** than to a self-verify
 
 ## Bitcoin system architecture
 
-Bitcoin matters to QMoney not because Bitcoin already solves quantum money, but because it contributes the **system architecture**:
-
 - distributed validation
 - signed transactions
 - public ownership tracking
@@ -110,6 +111,11 @@ QMoney tries to combine that system architecture with a quantum anti-counterfeit
 
 - **quantum** for unclonable notes
 - **classical distributed systems** for circulation and settlement
+
+--
+
+## Can QMoney use Bitcoin blocks?
+QMoney should carry on the immutability of the BTC blocks.
 
 ---
 
