@@ -145,6 +145,8 @@ not near-term deployment of production quantum money.
 - [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md) — how Peter Shor’s arguments should shape QMoney’s architecture split, terminology, and public-key research boundaries.
 - [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md) — transcript-backed note on Aaronson’s private-key quantum money ideas, adaptive-query security, compact-secret tradeoffs, and why QMoney fits the distributed private-key lineage.
 - [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md) — evaluation of Molina–Vidick–Watrous (2012) for QMoney, including why the paper's one-note-to-two-notes counterfeiting model is a strong fit for the current private-key baseline.
+- [`docs/research/latest-quantum-money-literature-and-qmoney.md`](docs/research/latest-quantum-money-literature-and-qmoney.md) — survey of the latest quantum money literature most relevant to QMoney, prioritizing Wiesner, Shor, Aaronson/Christiano, Zhandry, and recent oracle/noise-tolerant directions.
+- [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md) — ranked reading and prototyping roadmap for QMoney: what to read next, prototype next, monitor, and avoid.
 
 ---
 
@@ -238,6 +240,24 @@ The repo should be read as having two tracks:
 - hidden-subspace/oracle-backed prototypes
 - stronger coherence-sensitive verification
 - public-key constructions clearly separated from the current baseline
+- group-action, oracle/noise-tolerant, and anonymity-aware literature tracked as separate design directions
+
+---
+
+## Latest research directions
+
+Recent literature reinforces that QMoney's public-key future should be treated as a separate research program rather than as a small extension of the current BB84/quorum baseline.
+
+The most important newer directions to watch are:
+- **noise-tolerant public-key money from classical oracles** — especially promising for QMoney's formal/oracle workflow
+- **public-key money from abelian group actions** — one of the strongest modern public-key directions
+- **cryptanalysis of public-key money schemes** — essential to keep prototype claims honest
+- **anonymous public-key money** — relevant if QMoney ever combines public verification with privacy-sensitive circulation
+- **copy-complexity / unclonable-cryptography frameworks** — useful for broadening QMoney's attack models beyond a single counterfeit story
+
+See:
+- [`docs/research/latest-quantum-money-literature-and-qmoney.md`](docs/research/latest-quantum-money-literature-and-qmoney.md)
+- [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md)
 
 ---
 
@@ -248,6 +268,8 @@ The repo should be read as having two tracks:
 - Wootters, W. K., & Zurek, W. H. (1982). *A single quantum cannot be cloned*. Nature, 299(5886), 802–803.
 - Aaronson, S., & Christiano, P. (2012). *Quantum Money from Hidden Subspaces*. https://www.scottaaronson.com/papers/moneyfull.pdf
 - Molina, A., Vidick, T., & Watrous, J. (2012). *Optimal counterfeiting attacks and generalizations for Wiesner's quantum money*. https://arxiv.org/abs/1202.4010
+- Zhandry, M. (2023). *Quantum Money from Abelian Group Actions*. https://arxiv.org/abs/2307.12120
+- Yuen, P. (2024). *Noise-tolerant public-key quantum money from a classical oracle*. https://arxiv.org/abs/2407.06463
 
 ## Additional references
 - Scott Aaronson, *Stephen Wiesner (1942-2021)*: https://scottaaronson.blog/?p=5730
