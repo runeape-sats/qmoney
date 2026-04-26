@@ -489,12 +489,7 @@
   }
 
   .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
     padding: 10px 0 18px;
-    backdrop-filter: blur(18px);
-    background: color-mix(in srgb, var(--page-bg) 82%, transparent);
   }
 
   .header-top-row {
