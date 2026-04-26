@@ -111,6 +111,88 @@ A system-level transfer looks like this:
 
 This gives one-time quantum spend semantics with repeated circulation achieved by re-minting.
 
+### 5.1 Concrete 10-unit transfer semantics
+
+When two people transfer `10` units in the current QMoney architecture, the cleanest model is:
+
+- Alice owns some spendable note inventory worth `10` units
+- Alice creates a classical transfer intent naming Bob as the receiver
+- Alice presents the relevant note or notes to the verifier quorum
+- the quorum verifies and **consumes** the presented quantum state(s)
+- if the transfer is accepted, the ledger marks the old serials spent
+- the quorum mints fresh replacement note(s) for Bob with the same total value
+
+There are two natural denomination models:
+
+#### Model A — one 10-unit note
+- Alice owns a single note with value `10`
+- she spends that note once
+- the old serial is marked spent
+- Bob receives one fresh 10-unit note with a new serial
+
+#### Model B — UTXO-style bundle of ten 1-unit notes
+- Alice owns ten distinct 1-unit notes, each with its own serial
+- the transfer intent lists the ten input serials
+- the quorum verifies each presented note
+- all accepted input serials become spent
+- Bob receives either:
+  - ten fresh 1-unit notes, or
+  - one consolidated 10-unit replacement note
+
+The current code in `pkey_quorum/demo.py` implements the **note-transfer primitive** (`mint_bill`, `verify_and_remint`, spent-state, owner tracking), but it does **not** yet implement explicit denomination arithmetic. So the most accurate reading today is:
+
+> denomination and coin-selection semantics live at the classical ledger layer, while the current simulator demonstrates how each submitted quantum note is consumed and replaced by a fresh note for the receiver.
+
+### 5.2 Bitcoin-style UTXO interpretation
+
+A Bitcoin-like ledger layer can sit cleanly on top of the current quantum-note primitive.
+
+For a 10-unit payment from Alice to Bob:
+
+1. Alice selects a set of unspent QMoney note serials whose values sum to at least `10`.
+2. She signs a transfer intent naming:
+   - input serials
+   - Bob's owner public key
+   - optional change output back to herself
+3. The quorum verifies each referenced input note.
+4. Every verified input note is consumed by measurement and marked spent.
+5. The quorum re-mints fresh output notes matching the transaction outputs.
+
+Example:
+
+- inputs: `6 + 4`
+- outputs: `10 to Bob`
+
+Or with change:
+
+- inputs: `6 + 6`
+- outputs: `10 to Bob`, `2 back to Alice`
+
+In that sense, the quantum layer behaves like a consumptive authenticity check for each input UTXO, while the classical layer handles value accounting and output assignment.
+
+### 5.3 Message-sequence view of a 10-unit transfer
+
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Ledger
+    participant Quorum as Verifier Quorum
+    participant Bob
+
+    Alice->>Ledger: Create signed transfer intent\n(inputs worth 10 units, receiver = Bob)
+    Alice->>Quorum: Present quantum note(s) + transfer intent
+    Quorum->>Ledger: Check owner and spent status of input serial(s)
+    Ledger-->>Quorum: Inputs live and owned by Alice
+    Quorum->>Quorum: Measure note(s) using hidden basis/bit secrets
+    Quorum->>Ledger: Mark old serial(s) spent
+    Quorum->>Quorum: Mint fresh replacement note(s)
+    Quorum->>Ledger: Register new serial(s) for Bob\n(and change output if any)
+    Quorum-->>Bob: Deliver fresh 10-unit replacement note(s)
+    Ledger-->>Bob: Bob recorded as owner of new serial(s)
+```
+
+This diagram captures the key difference from ordinary bearer cash: Bob does **not** receive the exact same quantum object Alice held. Bob receives a **freshly minted replacement note** after quorum verification consumes Alice's submitted note.
+
 ---
 
 ## 6. Mapping to the current implementation

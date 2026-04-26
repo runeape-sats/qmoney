@@ -232,6 +232,19 @@ That sample captures the current implementation thesis of the repo:
 - re-mint a fresh note for the receiver
 - reject double-spend attempts at the ledger layer
 
+### Concrete 10-unit transfer mental model
+
+If Alice transfers `10` units to Bob, the current repo should be read in one of two ways:
+
+- **single-note model:** Alice spends one 10-unit note, which is consumed and replaced by one fresh 10-unit note for Bob
+- **UTXO model:** Alice spends a bundle of input notes whose values sum to `10`, and the quorum re-mints fresh output notes for Bob, plus change back to Alice if needed
+
+The important invariant is the same in both cases:
+
+> Alice's submitted quantum note(s) are consumed during verification, and Bob receives fresh replacement note(s) with new serial numbers.
+
+For the fuller step-by-step UTXO explanation and a transfer sequence diagram, see [`docs/architecture/software-mps-quorum-design.md`](docs/architecture/software-mps-quorum-design.md).
+
 ---
 
 ## Research direction
