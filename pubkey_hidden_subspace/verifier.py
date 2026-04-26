@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .note_family import HiddenSubspaceNote, HiddenSubspacePublicKey, hadamard_transform
-from .oracles import AUTHENTIC_CANDIDATE, OracleRegistry
+from .oracles import AUTHENTIC_CANDIDATE, OraclePublication, OracleRegistry
 
 
 @dataclass(frozen=True)
@@ -31,6 +31,9 @@ class HiddenSubspaceVerifier:
             return VerificationDecision(note.serial, False, "dimension_mismatch")
         if not self.oracle_registry.is_published(public_key.serial):
             return VerificationDecision(note.serial, False, "oracle_not_published")
+        publication = self.oracle_registry.publication_for(public_key.serial)
+        if publication != OraclePublication.from_public_key(public_key):
+            return VerificationDecision(note.serial, False, "oracle_publication_mismatch")
         if abs(note.norm_squared() - 1.0) > tolerance:
             return VerificationDecision(note.serial, False, "note_not_normalized")
 

@@ -264,6 +264,7 @@ def check_all_invariants() -> dict:
                 "transition": transition.name,
                 "invariant": invariant_name,
                 "result": result_str,
+                "backend": "z3",
             }
             if result == sat:
                 overall_ok = False

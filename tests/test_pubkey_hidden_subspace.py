@@ -89,6 +89,25 @@ class HiddenSubspaceMoneyTests(unittest.TestCase):
         self.assertEqual([record.kind for record in registry.query_log], [SUBSPACE_QUERY, DUAL_QUERY])
         self.assertEqual([record.serial for record in registry.query_log], ["note-1", "note-1"])
 
+    def test_oracle_registry_publish_is_idempotent_for_matching_publication(self):
+        registry = OracleRegistry()
+
+        first_publication = registry.publish(self.public_key)
+        second_publication = registry.publish(self.public_key)
+
+        self.assertIs(first_publication, second_publication)
+
+    def test_oracle_registry_rejects_conflicting_republication_for_same_serial(self):
+        registry = OracleRegistry()
+        conflicting_public_key = HiddenSubspaceMint.from_generators(
+            serial="note-1",
+            generators=((1, 0, 0),),
+        ).public_key
+        registry.publish(self.public_key)
+
+        with self.assertRaises(OraclePublicationError):
+            registry.publish(conflicting_public_key)
+
     def test_oracle_backed_verifier_requires_publication_before_acceptance(self):
         verifier = HiddenSubspaceVerifier(OracleRegistry())
 
@@ -96,6 +115,21 @@ class HiddenSubspaceMoneyTests(unittest.TestCase):
 
         self.assertFalse(decision.accepted)
         self.assertEqual(decision.reason, "oracle_not_published")
+
+    def test_oracle_backed_verifier_rejects_publication_mismatch(self):
+        registry = OracleRegistry()
+        conflicting_public_key = HiddenSubspaceMint.from_generators(
+            serial="note-1",
+            generators=((1, 0, 0),),
+        ).public_key
+        registry.publish(conflicting_public_key)
+        verifier = HiddenSubspaceVerifier(registry)
+
+        decision = verifier.verify(self.note, self.public_key)
+
+        self.assertFalse(decision.accepted)
+        self.assertEqual(decision.reason, "oracle_publication_mismatch")
+        self.assertEqual(registry.query_log, ())
 
     def test_oracle_backed_verifier_accepts_authentic_note_and_logs_queries(self):
         registry = OracleRegistry()
