@@ -2,9 +2,16 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from itertools import product
 from typing import Callable, Dict, List
 
-from z3 import And, Bool, BoolVal, If, Implies, Int, Not, Or, Solver, sat
+try:
+    from z3 import And, Bool, BoolVal, If, Int, Not, Or, Solver, sat
+
+    HAVE_Z3 = True
+except ImportError:
+    HAVE_Z3 = False
+    sat = "sat"
 
 
 NOTE_UNISSUED = 0
@@ -88,11 +95,21 @@ def query_answers_respect_oracle_rule(state: SymbolicState):
     return state.query_answers_respect_rule
 
 
+def subspace_queries_tagged_correctly(state: SymbolicState):
+    return state.subspace_queries_tagged_correctly
+
+
+def dual_queries_tagged_correctly(state: SymbolicState):
+    return state.dual_queries_tagged_correctly
+
+
 INVARIANTS: Dict[str, Callable[[SymbolicState], object]] = {
     "oracle_tables_match_issued": oracle_tables_match_issued,
     "oracle_tables_stay_coupled": oracle_tables_stay_coupled,
     "queries_only_reference_issued_serials": queries_only_reference_issued_serials,
     "query_answers_respect_oracle_rule": query_answers_respect_oracle_rule,
+    "subspace_queries_tagged_correctly": subspace_queries_tagged_correctly,
+    "dual_queries_tagged_correctly": dual_queries_tagged_correctly,
 }
 
 
@@ -225,6 +242,9 @@ def _base_solver_for_transition(pre: SymbolicState, post: SymbolicState, transit
 
 
 def check_all_invariants() -> dict:
+    if not HAVE_Z3:
+        return _check_all_invariants_concrete()
+
     report_checks: List[dict] = []
     pre = _state("pre")
     post = _state("post")
@@ -244,6 +264,154 @@ def check_all_invariants() -> dict:
             if result == sat:
                 overall_ok = False
                 entry["counterexample"] = solver.model().sexpr()
+            report_checks.append(entry)
+
+    return {
+        "result": "all_passed" if overall_ok else "violations_found",
+        "checks": report_checks,
+    }
+
+
+@dataclass(frozen=True)
+class ConcreteState:
+    issued: bool
+    note_state: int
+    verifier_outcome: int
+    subspace_published: bool
+    dual_published: bool
+    query_log_len: int
+    queries_only_reference_issued: bool
+    query_answers_respect_rule: bool
+    subspace_queries_tagged_correctly: bool
+    dual_queries_tagged_correctly: bool
+
+
+def _concrete_states() -> List[ConcreteState]:
+    return [
+        ConcreteState(*values)
+        for values in product(
+            (False, True),
+            range(NOTE_UNISSUED, NOTE_REJECTED + 1),
+            range(OUTCOME_IDLE, OUTCOME_REJECT + 1),
+            (False, True),
+            (False, True),
+            range(0, 3),
+            (False, True),
+            (False, True),
+            (False, True),
+            (False, True),
+        )
+    ]
+
+
+def _concrete_invariant(name: str, state: ConcreteState) -> bool:
+    if name == "oracle_tables_match_issued":
+        return state.subspace_published == state.issued and state.dual_published == state.issued
+    if name == "oracle_tables_stay_coupled":
+        return state.subspace_published == state.dual_published
+    if name == "queries_only_reference_issued_serials":
+        return state.queries_only_reference_issued
+    if name == "query_answers_respect_oracle_rule":
+        return state.query_answers_respect_rule
+    if name == "subspace_queries_tagged_correctly":
+        return state.subspace_queries_tagged_correctly
+    if name == "dual_queries_tagged_correctly":
+        return state.dual_queries_tagged_correctly
+    raise ValueError(f"unknown invariant {name!r}")
+
+
+def _with(state: ConcreteState, **changes) -> ConcreteState:
+    values = {field: getattr(state, field) for field in state.__dataclass_fields__}
+    values.update(changes)
+    return ConcreteState(**values)
+
+
+def _concrete_posts(transition: str, pre: ConcreteState) -> List[ConcreteState]:
+    if transition == "mint":
+        if pre.issued:
+            return []
+        return [
+            _with(
+                pre,
+                issued=True,
+                note_state=NOTE_AUTHENTIC,
+                verifier_outcome=OUTCOME_IDLE,
+                subspace_published=True,
+                dual_published=True,
+            )
+        ]
+    if transition == "present_authentic":
+        if not pre.issued or pre.note_state not in {NOTE_AUTHENTIC, NOTE_ACCEPTED, NOTE_REJECTED}:
+            return []
+        return [_with(pre, note_state=NOTE_AUTHENTIC, verifier_outcome=OUTCOME_IDLE)]
+    if transition == "present_counterfeit":
+        if not pre.issued or pre.note_state not in {NOTE_AUTHENTIC, NOTE_ACCEPTED, NOTE_REJECTED}:
+            return []
+        return [_with(pre, note_state=NOTE_COUNTERFEIT, verifier_outcome=OUTCOME_IDLE)]
+    if transition == "query_subspace_oracle":
+        if not pre.subspace_published or pre.query_log_len >= 2:
+            return []
+        return [
+            _with(
+                pre,
+                query_log_len=pre.query_log_len + 1,
+                queries_only_reference_issued=pre.queries_only_reference_issued and pre.issued,
+                subspace_queries_tagged_correctly=pre.subspace_queries_tagged_correctly and pre.subspace_published,
+            )
+        ]
+    if transition == "query_dual_oracle":
+        if not pre.dual_published or pre.query_log_len >= 2:
+            return []
+        return [
+            _with(
+                pre,
+                query_log_len=pre.query_log_len + 1,
+                queries_only_reference_issued=pre.queries_only_reference_issued and pre.issued,
+                dual_queries_tagged_correctly=pre.dual_queries_tagged_correctly and pre.dual_published,
+            )
+        ]
+    if transition == "verify_authentic":
+        if not pre.issued or not pre.subspace_published or not pre.dual_published or pre.note_state != NOTE_AUTHENTIC:
+            return []
+        return [_with(pre, note_state=NOTE_ACCEPTED, verifier_outcome=OUTCOME_ACCEPT)]
+    if transition == "reject_counterfeit":
+        if not pre.issued or not pre.subspace_published or not pre.dual_published or pre.note_state != NOTE_COUNTERFEIT:
+            return []
+        return [_with(pre, note_state=NOTE_REJECTED, verifier_outcome=OUTCOME_REJECT)]
+    if transition == "noop":
+        return [pre]
+    raise ValueError(f"unknown transition {transition!r}")
+
+
+def _check_all_invariants_concrete() -> dict:
+    report_checks: List[dict] = []
+    overall_ok = True
+    invariant_names = list(INVARIANTS)
+    pre_states = [
+        state
+        for state in _concrete_states()
+        if all(_concrete_invariant(invariant_name, state) for invariant_name in invariant_names)
+    ]
+
+    for transition in TRANSITIONS:
+        posts = [(pre, post) for pre in pre_states for post in _concrete_posts(transition.name, pre)]
+        for invariant_name in invariant_names:
+            violation = next(
+                ((pre, post) for pre, post in posts if not _concrete_invariant(invariant_name, post)),
+                None,
+            )
+            entry = {
+                "transition": transition.name,
+                "invariant": invariant_name,
+                "result": "sat" if violation else "unsat",
+                "backend": "concrete-fallback",
+            }
+            if violation:
+                overall_ok = False
+                entry["counterexample"] = {
+                    "pre": violation[0].__dict__,
+                    "post": violation[1].__dict__,
+                }
             report_checks.append(entry)
 
     return {

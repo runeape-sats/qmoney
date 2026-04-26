@@ -156,6 +156,7 @@ not near-term deployment of production quantum money.
 - [`docs/research/latest-quantum-money-literature-and-qmoney.md`](docs/research/latest-quantum-money-literature-and-qmoney.md) — survey of the latest quantum money literature most relevant to QMoney, prioritizing Wiesner, Shor, Aaronson/Christiano, Zhandry, and recent oracle/noise-tolerant directions.
 - [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md) — review of Artur Ekert’s quantum-cryptography work and what Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and measurement-independence assumptions imply for QMoney.
 - [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md) — ranked reading and prototyping roadmap for QMoney: what to read next, prototype next, monitor, and avoid.
+- [`docs/research/note-family-evaluation-checklist.md`](docs/research/note-family-evaluation-checklist.md) — checklist for evaluating future note families across verifier leakage, coherence sensitivity, counterfeiting, public/private status, noise, and repo integration.
 
 ---
 
@@ -175,6 +176,12 @@ The current simulator keeps the note family intentionally simple:
 This is a useful private-key baseline, not a claim of true public-key quantum money.
 
 A useful baseline attack model for this simulator family is the **simple one-note-to-two-notes counterfeiting attack** analyzed by Molina, Vidick, and Watrous (2012): given one valid note, what is the best probability of producing two notes that both pass verification? See [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md).
+
+The code now exposes small attack-model helpers for this baseline:
+- `one_note_to_two_counterfeit_trial(...)`
+- `adaptive_replacement_probe(...)`
+
+These are research utilities for testing verifier leakage and counterfeit behavior, not production security proofs.
 
 ### Actual implementation sample
 

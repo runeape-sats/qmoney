@@ -4,7 +4,8 @@ This package is the current **private-key quorum** baseline for QMoney.
 
 Current entrypoint:
 - `demo.py` — BB84/product-state minting, quorum verification, verify-and-remint,
-  and a simple intercept/resend counterfeit experiment
+  simple intercept/resend counterfeit experiments, one-note-to-two-note counterfeit
+  trials, and adaptive replacement probes for verifier-leakage testing
 
 What belongs here:
 - private-key note-family logic

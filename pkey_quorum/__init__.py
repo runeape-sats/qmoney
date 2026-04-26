@@ -1,11 +1,33 @@
-from .demo import Bill, BillSecret, Ledger, QuorumNode, QuorumService, counterfeit_intercept_resend, main
+from .demo import (
+    AdaptiveProbeResult,
+    Bill,
+    BillSecret,
+    CounterfeitPairTrial,
+    Ledger,
+    QuorumNode,
+    QuorumService,
+    VerificationSample,
+    adaptive_replacement_probe,
+    clone_bill,
+    counterfeit_intercept_resend,
+    evaluate_bill_against_secret,
+    main,
+    one_note_to_two_counterfeit_trial,
+)
 
 __all__ = [
+    "AdaptiveProbeResult",
     "Bill",
     "BillSecret",
+    "CounterfeitPairTrial",
     "Ledger",
     "QuorumNode",
     "QuorumService",
+    "VerificationSample",
+    "adaptive_replacement_probe",
+    "clone_bill",
     "counterfeit_intercept_resend",
+    "evaluate_bill_against_secret",
     "main",
+    "one_note_to_two_counterfeit_trial",
 ]

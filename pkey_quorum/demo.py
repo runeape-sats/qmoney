@@ -16,7 +16,7 @@ import math
 import random
 import secrets
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 Qubit = Tuple[complex, complex]  # (alpha, beta) in computational basis
 
@@ -90,6 +90,31 @@ class Bill:
 class BillSecret:
     basis: List[int]  # 0=Z, 1=X
     bits: List[int]  # expected measurement results
+
+
+@dataclass(frozen=True)
+class VerificationSample:
+    accepted: bool
+    matches: int
+    measured: int
+
+
+@dataclass(frozen=True)
+class CounterfeitPairTrial:
+    first: VerificationSample
+    second: VerificationSample
+
+    @property
+    def pair_accepted(self) -> bool:
+        return self.first.accepted and self.second.accepted
+
+
+@dataclass(frozen=True)
+class AdaptiveProbeResult:
+    index: int
+    basis_guess: int
+    bit_guess: int
+    verification: VerificationSample
 
 
 class Ledger:
@@ -232,6 +257,90 @@ def counterfeit_intercept_resend(bill: Bill, rng: random.Random) -> Bill:
         outcome, _collapsed = measure_in_basis(q, basis_guess, rng)
         forged_qubits.append(prepare_bb84(basis_guess, outcome))
     return Bill(serial=bill.serial, qubits=forged_qubits)
+
+
+def clone_bill(bill: Bill) -> Bill:
+    return Bill(serial=bill.serial, qubits=list(bill.qubits))
+
+
+def evaluate_bill_against_secret(
+    bill: Bill,
+    secret: BillSecret,
+    *,
+    tolerance: int = 0,
+    noise_bitflip_p: float = 0.0,
+    seed: int | None = None,
+) -> VerificationSample:
+    if bill.n != len(secret.basis) or bill.n != len(secret.bits):
+        raise ValueError("bill and secret dimensions must match")
+    if tolerance < 0 or tolerance > bill.n:
+        raise ValueError("tolerance must be in [0, n]")
+
+    rng = random.Random(seed)
+    matches = 0
+    for i, qubit in enumerate(bill.qubits):
+        noisy = maybe_bitflip(qubit, noise_bitflip_p, rng)
+        outcome, collapsed = measure_in_basis(noisy, secret.basis[i], rng)
+        bill.qubits[i] = collapsed
+        if outcome == secret.bits[i]:
+            matches += 1
+
+    return VerificationSample(
+        accepted=matches >= bill.n - tolerance,
+        matches=matches,
+        measured=bill.n,
+    )
+
+
+def one_note_to_two_counterfeit_trial(
+    bill: Bill,
+    secret: BillSecret,
+    rng: random.Random,
+    *,
+    tolerance: int = 0,
+    noise_bitflip_p: float = 0.0,
+) -> CounterfeitPairTrial:
+    forged = counterfeit_intercept_resend(clone_bill(bill), rng)
+    first = clone_bill(forged)
+    second = clone_bill(forged)
+    return CounterfeitPairTrial(
+        first=evaluate_bill_against_secret(
+            first,
+            secret,
+            tolerance=tolerance,
+            noise_bitflip_p=noise_bitflip_p,
+            seed=rng.getrandbits(64),
+        ),
+        second=evaluate_bill_against_secret(
+            second,
+            secret,
+            tolerance=tolerance,
+            noise_bitflip_p=noise_bitflip_p,
+            seed=rng.getrandbits(64),
+        ),
+    )
+
+
+def adaptive_replacement_probe(
+    bill: Bill,
+    secret: BillSecret,
+    *,
+    index: int,
+    basis_guess: int,
+    bit_guess: int,
+    tolerance: int = 0,
+    seed: int | None = None,
+) -> AdaptiveProbeResult:
+    if index < 0 or index >= bill.n:
+        raise ValueError("index must be in [0, n)")
+    candidate = clone_bill(bill)
+    candidate.qubits[index] = prepare_bb84(basis_guess, bit_guess)
+    return AdaptiveProbeResult(
+        index=index,
+        basis_guess=basis_guess,
+        bit_guess=bit_guess,
+        verification=evaluate_bill_against_secret(candidate, secret, tolerance=tolerance, seed=seed),
+    )
 
 
 def main() -> int:

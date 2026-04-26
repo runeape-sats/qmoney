@@ -31,6 +31,8 @@ class OracleInvariantZ3Tests(unittest.TestCase):
                 "oracle_tables_stay_coupled",
                 "queries_only_reference_issued_serials",
                 "query_answers_respect_oracle_rule",
+                "subspace_queries_tagged_correctly",
+                "dual_queries_tagged_correctly",
             },
         )
 
