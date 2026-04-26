@@ -6,12 +6,12 @@ from itertools import product
 from typing import Callable, Dict, List
 
 try:
-    from z3 import And, Bool, BoolVal, If, Int, Not, Or, Solver, sat
+    from z3 import And, Bool, BoolVal, If, Int, Not, Or, Solver, sat as Z3_SAT
 
     HAVE_Z3 = True
 except ImportError:
     HAVE_Z3 = False
-    sat = "sat"
+    Z3_SAT = None
 
 
 NOTE_UNISSUED = 0
@@ -261,7 +261,7 @@ def check_all_invariants() -> dict:
                 "invariant": invariant_name,
                 "result": result_str,
             }
-            if result == sat:
+            if result == Z3_SAT:
                 overall_ok = False
                 entry["counterexample"] = solver.model().sexpr()
             report_checks.append(entry)
