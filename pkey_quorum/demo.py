@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""QMoney quorum + MPS (D=1) demo.
+"""QMoney quorum + BB84 symbolic demo.
 
 This is a pure software simulator for the Appendix-A design in README.md:
-- Bills are BB84 product states (MPS bond dimension D=1).
+- The default bill size is 512 qubits.
+- Bills are simulated symbolically as BB84 product states.
 - A verifier quorum holds the secret bases/bits for each serial.
 - Verification consumes the submitted bill; on success the quorum re-mints a fresh bill to the receiver.
 
@@ -19,6 +20,10 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Sequence, Tuple
 
 Qubit = Tuple[complex, complex]  # (alpha, beta) in computational basis
+
+DEFAULT_QUBITS = 512
+SUPPORTED_QUBIT_COUNTS = (32, 128, 512, 1024)
+SIMULATION_SETUP = "BB84 symbolic product-state private-key quorum"
 
 _SQRT2 = math.sqrt(2.0)
 
@@ -345,8 +350,17 @@ def adaptive_replacement_probe(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="QMoney quorum + MPS (D=1) software demo")
-    parser.add_argument("--n", type=int, default=512, choices=[32, 128, 512, 1024])
+    parser = argparse.ArgumentParser(
+        description=f"QMoney {SIMULATION_SETUP} software demo",
+        epilog=f"Defaults: --n {DEFAULT_QUBITS}; setup: {SIMULATION_SETUP}.",
+    )
+    parser.add_argument(
+        "--n",
+        type=int,
+        default=DEFAULT_QUBITS,
+        choices=SUPPORTED_QUBIT_COUNTS,
+        help=f"number of BB84 qubits per bill (default: {DEFAULT_QUBITS})",
+    )
     parser.add_argument("--nodes", type=int, default=4, help="quorum size N")
     parser.add_argument("--threshold", type=int, default=3, help="minimum live participants required to attempt verification")
     parser.add_argument("--tolerance", type=int, default=0, help="allowed mismatches")
@@ -355,6 +369,8 @@ def main() -> int:
     parser.add_argument("--forge-trials", type=int, default=0, help="run intercept/resend forge trials (use small n)")
 
     args = parser.parse_args()
+
+    print(f"setup={SIMULATION_SETUP}; qubits={args.n}")
 
     nodes = [QuorumNode(i) for i in range(args.nodes)]
     quorum = QuorumService(nodes, threshold=args.threshold)

@@ -163,8 +163,15 @@ not near-term deployment of production quantum money.
 
 ## Current simulator / demo
 
+Default setup:
+- **512 BB84 qubits per bill**
+- **BB84 symbolic product-state simulation**
+- private-key quorum verification with hidden basis/bit data
+- no required GPU or dense state-vector simulation
+
 Run the pure software simulator demo:
 
+- `python pkey_quorum/demo.py`
 - `python pkey_quorum/demo.py --n 512`
 - `python pkey_quorum/demo.py --n 1024`
 
