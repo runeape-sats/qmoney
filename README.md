@@ -101,6 +101,55 @@ This is closer to **distributed private-key quantum cash** than to a self-verify
 
 ---
 
+## Comparison with public-key hidden subspace and Bitcoin
+
+| Dimension | Current private-key quorum | Public-key hidden subspace | Standard BTC transaction |
+| --- | --- | --- | --- |
+| Repo track | `pkey_quorum` | `pubkey_hidden_subspace` | External reference model |
+| Thing being spent | BB84-style private-key bill: `serial + qubits` | Hidden-subspace note: `serial + quantum state over a subspace` | One or more UTXOs |
+| Ownership proof | Possession of a valid bill plus ledger claimant check | Possession of a note that passes public hidden-subspace verification | Digital signature from the private key controlling the UTXO |
+| Verification | Private quorum nodes check hidden per-qubit basis/bit secrets | Public verifier checks subspace and dual-subspace structure/oracles | Anyone checks signatures, scripts, UTXO existence, and consensus rules |
+| Transfer model | Verify old bill, consume it by measurement, mint a fresh bill to the receiver | Research model verifies a note against public key/oracle publication; production transfer semantics are not the baseline yet | Consume old UTXOs, create new UTXOs |
+| Double-spend prevention | Local `Ledger` marks serials spent | Not fully modeled as production settlement; would still need lifecycle/ledger rules | Global consensus and UTXO-set validation |
+| Trust model | Requires quorum nodes to hold secrets and be available | Aims toward public verification, but the current prototype exposes too much structure | Trust-minimized public validation by full nodes |
+| Secret material | Quorum holds private basis/bit secrets | Mint has subspace generators; verifier uses public key/oracle data | Sender holds private signing key |
+| Who can verify | Only quorum participants with the bill secrets | Anyone with the public key/oracle publication in the model | Anyone running a Bitcoin verifier/full node |
+| Counterfeit resistance | BB84 disturbance/no-cloning intuition in a private-key setting | Hidden-subspace quantum money idea, but the current prototype is not an unforgeability claim | Signature unforgeability plus consensus against double spends |
+| Public auditability | Low to medium; verifier secrets are private | Higher in concept; public key/oracle workflow is visible | High; transactions are public on-chain |
+| Current repo status | Current private-key baseline | Research-only prototype, tiny `n`, conceptual clarity over cryptographic realism | Real production protocol |
+| Main caveat | Trusted/private verifier quorum | Current `HiddenSubspacePublicKey` publishes enough structure to reconstruct an accepting note | Requires network fees, block inclusion, and probabilistic finality |
+
+Mental model:
+
+```text
+pkey_quorum:
+    bill serial + BB84 qubits + quorum secrets
+    ~= private-banknote-style money
+
+pubkey_hidden_subspace:
+    serial + hidden-subspace state + public verification structure
+    ~= public-verifiable quantum banknote research model
+
+Bitcoin:
+    UTXO + signature + consensus inclusion
+    ~= public ledger money
+```
+
+The major upgrade that `pubkey_hidden_subspace` explores over `pkey_quorum` is
+public verification. In `pkey_quorum`, the verifier must know private basis/bit
+secrets. In a public-key hidden-subspace design, the goal is for anyone to verify
+a note without learning enough to mint counterfeits.
+
+The current implementation does **not** claim that full result. The
+`pubkey_hidden_subspace` prototype publishes enough subspace structure that
+software can reconstruct an accepting note. It is therefore a research model of
+the public-verification workflow, not a deployable transaction system. Compared
+with Bitcoin, QMoney's current tracks are note-family and verifier experiments;
+Bitcoin is a production classical ledger protocol with public validation and
+consensus settlement.
+
+---
+
 ## Bitcoin system architecture
 
 - distributed validation
