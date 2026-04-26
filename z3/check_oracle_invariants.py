@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 from typing import Callable, Dict, List
 
 try:
@@ -120,9 +120,9 @@ INVARIANTS: Dict[str, Callable[[SymbolicState], object]] = {
 def _unchanged_except(pre: SymbolicState, post: SymbolicState, *field_names: str):
     changed = set(field_names)
     clauses = []
-    for field in pre.__dataclass_fields__:
-        if field not in changed:
-            clauses.append(getattr(post, field) == getattr(pre, field))
+    for field in fields(pre):
+        if field.name not in changed:
+            clauses.append(getattr(post, field.name) == getattr(pre, field.name))
     return And(*clauses) if clauses else BoolVal(True)
 
 
@@ -221,7 +221,7 @@ def reject_counterfeit_transition(pre: SymbolicState, post: SymbolicState):
 
 
 def noop_transition(pre: SymbolicState, post: SymbolicState):
-    return And(*[getattr(post, field) == getattr(pre, field) for field in pre.__dataclass_fields__])
+    return And(*[getattr(post, field.name) == getattr(pre, field.name) for field in fields(pre)])
 
 
 TRANSITIONS = [
@@ -327,7 +327,7 @@ def _concrete_invariant(name: str, state: ConcreteState) -> bool:
 
 
 def _with(state: ConcreteState, **changes) -> ConcreteState:
-    values = {field: getattr(state, field) for field in state.__dataclass_fields__}
+    values = {field.name: getattr(state, field.name) for field in fields(state)}
     values.update(changes)
     return ConcreteState(**values)
 
