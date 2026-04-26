@@ -26,6 +26,8 @@ class OracleQueryRecord:
 
 @dataclass(frozen=True)
 class OraclePublication:
+    """Published oracle data with cached supports for repeated membership queries."""
+
     serial: str
     dimension: int
     subspace_vectors: Tuple[Vector, ...]
@@ -55,7 +57,7 @@ class OracleRegistry:
         existing_publication = self._publications.get(publication.serial)
         if existing_publication is not None:
             if existing_publication != publication:
-                raise OraclePublicationError(f"oracle state for serial {publication.serial!r} has already been published")
+                raise OraclePublicationError(f"conflicting oracle publication for serial {publication.serial!r} already exists")
             return existing_publication
         self._publications[publication.serial] = publication
         return publication
