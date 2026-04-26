@@ -147,6 +147,7 @@ not near-term deployment of production quantum money.
 ### Architecture
 - [`docs/architecture/public-vs-private-key-qmoney.md`](docs/architecture/public-vs-private-key-qmoney.md) — canonical statement of the current repo architecture and why QMoney is private-key quantum cash rather than public-key quantum money.
 - [`docs/architecture/software-mps-quorum-design.md`](docs/architecture/software-mps-quorum-design.md) — preserved technical appendix for the current software-only MPS/quorum baseline, including data model, protocol flow, simulation assumptions, and security intuition.
+- [`docs/architecture/classical-simulation-hardware-breakdown.md`](docs/architecture/classical-simulation-hardware-breakdown.md) — RAM/VRAM breakdown for MPS, sparse state-vector, and BB84 symbolic simulation approaches.
 - [`docs/architecture/public-key-implementation-workflow.md`](docs/architecture/public-key-implementation-workflow.md) — implementation source of truth for AI agents and human implementers extending the public-key/oracle track in any language.
 
 ### Research notes
