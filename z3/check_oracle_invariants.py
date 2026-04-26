@@ -5,12 +5,12 @@ from dataclasses import dataclass, fields
 from typing import Callable, Dict, List
 
 try:
-    from z3 import And, Bool, BoolVal, If, Int, Not, Or, Solver, sat as z3_sat
+    from z3 import And, Bool, BoolVal, If, Int, Not, Or, Solver, sat
 
     HAVE_Z3 = True
 except ImportError:
     HAVE_Z3 = False
-    z3_sat = None
+    sat = None
 
     def _missing_z3(*_args, **_kwargs):
         raise NotImplementedError("Z3 backend is unavailable; install z3-solver to use symbolic checks directly")
@@ -265,7 +265,7 @@ def check_all_invariants() -> dict:
                 "invariant": invariant_name,
                 "result": result_str,
             }
-            if result == z3_sat:
+            if result == sat:
                 overall_ok = False
                 entry["counterexample"] = solver.model().sexpr()
             report_checks.append(entry)

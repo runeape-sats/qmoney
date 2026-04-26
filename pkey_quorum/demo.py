@@ -260,6 +260,7 @@ def counterfeit_intercept_resend(bill: Bill, rng: random.Random) -> Bill:
 
 
 def clone_bill(bill: Bill) -> Bill:
+    """Return a shallow note copy; qubits are immutable tuples, while the qubit list is mutable."""
     return Bill(serial=bill.serial, qubits=list(bill.qubits))
 
 

@@ -7,8 +7,8 @@ from .note_family import HiddenSubspacePublicKey, Vector
 
 SUBSPACE_QUERY = "subspace"
 DUAL_QUERY = "dual"
-AUTHENTIC_CANDIDATE = "authenticCandidate"
-COUNTERFEIT_CANDIDATE = "counterfeitCandidate"
+AUTHENTIC_CANDIDATE = "authentic_candidate"
+COUNTERFEIT_CANDIDATE = "counterfeit_candidate"
 
 
 class OraclePublicationError(ValueError):
