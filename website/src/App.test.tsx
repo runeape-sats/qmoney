@@ -72,5 +72,9 @@ describe('App', () => {
       'href',
       'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-vs-private-key-qmoney.md',
     )
+    expect(screen.getByRole('link', { name: /ekert quantum cryptography and qmoney/i })).toHaveAttribute(
+      'href',
+      'https://github.com/runeape-sats/qmoney/blob/main/docs/research/ekert-quantum-cryptography-and-qmoney.md',
+    )
   })
 })

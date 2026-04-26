@@ -6,6 +6,7 @@ QMoney is a _work-in-progress_ research repo for "distributed private-key quantu
 
 - **[Stephen Wiesner](https://scottaaronson.blog/?p=5730) / [Peter Shor](https://math.mit.edu/~shor/)'s quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
 - **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf)'s private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
+- **Artur Ekert's quantum cryptography ideas**: Bell-inequality security witnesses, entanglement-based key distribution, noisy-channel privacy amplification, and the distinction between note-family security and infrastructure/session certification
 - **[Satoshi Nakamoto](https://bitcoin.org/bitcoin.pdf)'s Bitcoin**: public ownership, signed transfer intent, distributed validation, and ledger finality
 - and more...(to be added here).
 
@@ -27,6 +28,7 @@ A few historical stories matter for how QMoney frames itself:
 - **The paper was not celebrated immediately.** As Aaronson recounts, the manuscript was rejected once, then shelved for years before finally appearing in 1983. Quantum money started as an idea that sounded too early, too weird, and too far ahead of the surrounding field.
 - **No-cloning was part of the original intuition before it was formalized.** Wiesner used the impossibility of copying unknown quantum states as obvious background well before the no-cloning theorem was named and published in 1982.
 - **The line from Wiesner to BB84 is direct.** Bennett and Brassard later transformed related ideas into quantum key distribution, and the modern field of quantum cryptography grew partly out of that same conceptual seed.
+- **Ekert pushed that cryptographic line further through Bell nonlocality.** Entanglement-based QKD and Bell-inequality security tests showed that the same quantum foundations behind Wiesner's hidden-state intuition could also certify channel integrity, randomness, and eavesdropping resistance.
 - **Private-key quantum money came first.** Wiesner's banknote scheme relied on hidden verification data held by the issuing bank, which is exactly why QMoney is careful to distinguish its current private-key baseline from future public-key ambitions.
 
 That history matters because it shows that quantum money was never just about a flashy quantum token. From the beginning, it was about what uniquely quantum information lets you do: create states that are easy to verify with the right hidden information but fundamentally hard to copy.
@@ -152,6 +154,7 @@ not near-term deployment of production quantum money.
 - [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md) — transcript-backed note on Aaronson’s private-key quantum money ideas, adaptive-query security, compact-secret tradeoffs, and why QMoney fits the distributed private-key lineage.
 - [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md) — evaluation of Molina–Vidick–Watrous (2012) for QMoney, including why the paper's one-note-to-two-notes counterfeiting model is a strong fit for the current private-key baseline.
 - [`docs/research/latest-quantum-money-literature-and-qmoney.md`](docs/research/latest-quantum-money-literature-and-qmoney.md) — survey of the latest quantum money literature most relevant to QMoney, prioritizing Wiesner, Shor, Aaronson/Christiano, Zhandry, and recent oracle/noise-tolerant directions.
+- [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md) — review of Artur Ekert’s quantum-cryptography work and what Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and measurement-independence assumptions imply for QMoney.
 - [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md) — ranked reading and prototyping roadmap for QMoney: what to read next, prototype next, monitor, and avoid.
 
 ---
@@ -281,3 +284,4 @@ See:
 - Scott Aaronson, *Stephen Wiesner (1942-2021)*: https://scottaaronson.blog/?p=5730
 - Peter Shor seminar transcript notes in this repo: [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md)
 - Scott Aaronson seminar transcript notes in this repo: [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md)
+- Artur Ekert review note in this repo: [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md)
