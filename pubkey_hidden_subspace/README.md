@@ -6,6 +6,8 @@ kept intentionally separate from the BB84/quorum private-key baseline in
 
 Current entrypoint:
 - `note_family.py` — tiny state-vector hidden-subspace mint/verifier model
+- `oracles.py` — explicit oracle publication/query registry with query logging
+- `verifier.py` — oracle-backed verifier workflow that mirrors the abstract lifecycle model
 
 Current scope:
 - tiny `n` only
@@ -23,6 +25,4 @@ Non-goals for this prototype:
 - scalable qubit counts
 
 Planned expansion points for this namespace:
-- `oracles.py`
-- `verifier.py`
 - `noise_tolerant_hidden_subspace.py`

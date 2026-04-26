@@ -1,7 +1,13 @@
 import unittest
 from types import MethodType
 
-from pkey_quorum import Ledger, QuorumNode, QuorumService
+from pkey_quorum import (
+    Ledger,
+    QuorumNode,
+    QuorumService,
+    adaptive_replacement_probe,
+    one_note_to_two_counterfeit_trial,
+)
 
 
 class QuorumVerificationTests(unittest.TestCase):
@@ -54,6 +60,48 @@ class QuorumVerificationTests(unittest.TestCase):
         self.assertIsNone(new_bill)
         self.assertFalse(ledger.is_spent(bill.serial))
         self.assertEqual(ledger.owner_of(bill.serial), "alice")
+
+    def test_one_note_to_two_counterfeit_trial_tracks_both_candidate_verifications(self):
+        import random
+
+        nodes = [QuorumNode(i) for i in range(3)]
+        quorum = QuorumService(nodes, threshold=2)
+        ledger = Ledger()
+        bill = quorum.mint_bill(6, owner="alice", ledger=ledger)
+        secret = nodes[0]._secrets[bill.serial]
+
+        trial = one_note_to_two_counterfeit_trial(bill, secret, random.Random(7))
+
+        self.assertEqual(trial.first.measured, 6)
+        self.assertEqual(trial.second.measured, 6)
+        self.assertEqual(trial.pair_accepted, trial.first.accepted and trial.second.accepted)
+
+    def test_adaptive_replacement_probe_exposes_accept_reject_leakage_for_single_qubit_guess(self):
+        nodes = [QuorumNode(i) for i in range(3)]
+        quorum = QuorumService(nodes, threshold=2)
+        ledger = Ledger()
+        bill = quorum.mint_bill(4, owner="alice", ledger=ledger)
+        secret = nodes[0]._secrets[bill.serial]
+
+        matching_probe = adaptive_replacement_probe(
+            bill,
+            secret,
+            index=0,
+            basis_guess=secret.basis[0],
+            bit_guess=secret.bits[0],
+            seed=123,
+        )
+        wrong_bit_probe = adaptive_replacement_probe(
+            bill,
+            secret,
+            index=0,
+            basis_guess=secret.basis[0],
+            bit_guess=1 - secret.bits[0],
+            seed=123,
+        )
+
+        self.assertTrue(matching_probe.verification.accepted)
+        self.assertFalse(wrong_bit_probe.verification.accepted)
 
 
 if __name__ == "__main__":

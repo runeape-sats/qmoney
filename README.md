@@ -101,6 +101,55 @@ This is closer to **distributed private-key quantum cash** than to a self-verify
 
 ---
 
+## Comparison with public-key hidden subspace and Bitcoin
+
+| Dimension | Current private-key quorum | Public-key hidden subspace | Standard BTC transaction |
+| --- | --- | --- | --- |
+| Repo track | `pkey_quorum` | `pubkey_hidden_subspace` | External reference model |
+| Thing being spent | BB84-style private-key bill: `serial + qubits` | Hidden-subspace note: `serial + quantum state over a subspace` | One or more UTXOs |
+| Ownership proof | Possession of a valid bill plus ledger claimant check | Possession of a note that passes public hidden-subspace verification | Digital signature from the private key controlling the UTXO |
+| Verification | Private quorum nodes check hidden per-qubit basis/bit secrets | Public verifier checks subspace and dual-subspace structure/oracles | Anyone checks signatures, scripts, UTXO existence, and consensus rules |
+| Transfer model | Verify old bill, consume it by measurement, mint a fresh bill to the receiver | Research model verifies a note against public key/oracle publication; production transfer semantics are not the baseline yet | Consume old UTXOs, create new UTXOs |
+| Double-spend prevention | Local `Ledger` marks serials spent | Not fully modeled as production settlement; would still need lifecycle/ledger rules | Global consensus and UTXO-set validation |
+| Trust model | Requires quorum nodes to hold secrets and be available | Aims toward public verification, but the current prototype exposes too much structure | Trust-minimized public validation by full nodes |
+| Secret material | Quorum holds private basis/bit secrets | Mint has subspace generators; verifier uses public key/oracle data | Sender holds private signing key |
+| Who can verify | Only quorum participants with the bill secrets | Anyone with the public key/oracle publication in the model | Anyone running a Bitcoin verifier/full node |
+| Counterfeit resistance | BB84 disturbance/no-cloning intuition in a private-key setting | Hidden-subspace quantum money idea, but the current prototype is not an unforgeability claim | Signature unforgeability plus consensus against double spends |
+| Public auditability | Low to medium; verifier secrets are private | Higher in concept; public key/oracle workflow is visible | High; transactions are public on-chain |
+| Current repo status | Current private-key baseline | Research-only prototype, tiny `n`, conceptual clarity over cryptographic realism | Real production protocol |
+| Main caveat | Trusted/private verifier quorum | Current `HiddenSubspacePublicKey` publishes enough structure to reconstruct an accepting note | Requires network fees, block inclusion, and probabilistic finality |
+
+Mental model:
+
+```text
+pkey_quorum:
+    bill serial + BB84 qubits + quorum secrets
+    ~= private-banknote-style money
+
+pubkey_hidden_subspace:
+    serial + hidden-subspace state + public verification structure
+    ~= public-verifiable quantum banknote research model
+
+Bitcoin:
+    UTXO + signature + consensus inclusion
+    ~= public ledger money
+```
+
+The major upgrade that `pubkey_hidden_subspace` explores over `pkey_quorum` is
+public verification. In `pkey_quorum`, the verifier must know private basis/bit
+secrets. In a public-key hidden-subspace design, the goal is for anyone to verify
+a note without learning enough to mint counterfeits.
+
+The current implementation does **not** claim that full result. The
+`pubkey_hidden_subspace` prototype publishes enough subspace structure that
+software can reconstruct an accepting note. It is therefore a research model of
+the public-verification workflow, not a deployable transaction system. Compared
+with Bitcoin, QMoney's current tracks are note-family and verifier experiments;
+Bitcoin is a production classical ledger protocol with public validation and
+consensus settlement.
+
+---
+
 ## Bitcoin system architecture
 
 - distributed validation
@@ -147,6 +196,7 @@ not near-term deployment of production quantum money.
 ### Architecture
 - [`docs/architecture/public-vs-private-key-qmoney.md`](docs/architecture/public-vs-private-key-qmoney.md) — canonical statement of the current repo architecture and why QMoney is private-key quantum cash rather than public-key quantum money.
 - [`docs/architecture/software-mps-quorum-design.md`](docs/architecture/software-mps-quorum-design.md) — preserved technical appendix for the current software-only MPS/quorum baseline, including data model, protocol flow, simulation assumptions, and security intuition.
+- [`docs/architecture/classical-simulation-hardware-breakdown.md`](docs/architecture/classical-simulation-hardware-breakdown.md) — RAM/VRAM breakdown for MPS, sparse state-vector, and BB84 symbolic simulation approaches.
 - [`docs/architecture/public-key-implementation-workflow.md`](docs/architecture/public-key-implementation-workflow.md) — implementation source of truth for AI agents and human implementers extending the public-key/oracle track in any language.
 
 ### Research notes
@@ -156,13 +206,21 @@ not near-term deployment of production quantum money.
 - [`docs/research/latest-quantum-money-literature-and-qmoney.md`](docs/research/latest-quantum-money-literature-and-qmoney.md) — survey of the latest quantum money literature most relevant to QMoney, prioritizing Wiesner, Shor, Aaronson/Christiano, Zhandry, and recent oracle/noise-tolerant directions.
 - [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md) — review of Artur Ekert’s quantum-cryptography work and what Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and measurement-independence assumptions imply for QMoney.
 - [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md) — ranked reading and prototyping roadmap for QMoney: what to read next, prototype next, monitor, and avoid.
+- [`docs/research/note-family-evaluation-checklist.md`](docs/research/note-family-evaluation-checklist.md) — checklist for evaluating future note families across verifier leakage, coherence sensitivity, counterfeiting, public/private status, noise, and repo integration.
 
 ---
 
 ## Current simulator / demo
 
+Default setup:
+- **512 BB84 qubits per bill**
+- **BB84 symbolic product-state simulation**
+- private-key quorum verification with hidden basis/bit data
+- no required GPU or dense state-vector simulation
+
 Run the pure software simulator demo:
 
+- `python pkey_quorum/demo.py`
 - `python pkey_quorum/demo.py --n 512`
 - `python pkey_quorum/demo.py --n 1024`
 
@@ -175,6 +233,12 @@ The current simulator keeps the note family intentionally simple:
 This is a useful private-key baseline, not a claim of true public-key quantum money.
 
 A useful baseline attack model for this simulator family is the **simple one-note-to-two-notes counterfeiting attack** analyzed by Molina, Vidick, and Watrous (2012): given one valid note, what is the best probability of producing two notes that both pass verification? See [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md).
+
+The code now exposes small attack-model helpers for this baseline:
+- `one_note_to_two_counterfeit_trial(...)`
+- `adaptive_replacement_probe(...)`
+
+These are research utilities for testing verifier leakage and counterfeit behavior, not production security proofs.
 
 ### Actual implementation sample
 

@@ -73,6 +73,69 @@ const currentReferences = [
   },
 ]
 
+const comparisonRows = [
+  {
+    dimension: 'Thing being spent',
+    pkey: 'BB84-style private-key bill: serial + qubits',
+    pubkey: 'Hidden-subspace note: serial + quantum state over a subspace',
+    bitcoin: 'One or more UTXOs',
+  },
+  {
+    dimension: 'Ownership proof',
+    pkey: 'Possession of a valid bill plus ledger claimant check',
+    pubkey: 'Possession of a note that passes public hidden-subspace verification',
+    bitcoin: 'Digital signature from the private key controlling the UTXO',
+  },
+  {
+    dimension: 'Verification',
+    pkey: 'Private quorum nodes check hidden per-qubit basis/bit secrets',
+    pubkey: 'Public verifier checks subspace and dual-subspace structure/oracles',
+    bitcoin: 'Anyone checks signatures, scripts, UTXO existence, and consensus rules',
+  },
+  {
+    dimension: 'Transfer model',
+    pkey: 'Verify old bill, consume it by measurement, mint a fresh bill to the receiver',
+    pubkey: 'Research model verifies a note against public key/oracle publication',
+    bitcoin: 'Consume old UTXOs, create new UTXOs',
+  },
+  {
+    dimension: 'Double-spend prevention',
+    pkey: 'Local Ledger marks serials spent',
+    pubkey: 'Not fully modeled as production settlement yet',
+    bitcoin: 'Global consensus and UTXO-set validation',
+  },
+  {
+    dimension: 'Trust model',
+    pkey: 'Requires quorum nodes to hold secrets and be available',
+    pubkey: 'Aims toward public verification, but the current prototype exposes too much structure',
+    bitcoin: 'Trust-minimized public validation by full nodes',
+  },
+  {
+    dimension: 'Who can verify',
+    pkey: 'Only quorum participants with the bill secrets',
+    pubkey: 'Anyone with the public key/oracle publication in the model',
+    bitcoin: 'Anyone running a Bitcoin verifier/full node',
+  },
+  {
+    dimension: 'Counterfeit resistance',
+    pkey: 'BB84 disturbance/no-cloning intuition in a private-key setting',
+    pubkey: 'Hidden-subspace quantum money idea, without a current unforgeability claim',
+    bitcoin: 'Signature unforgeability plus consensus against double spends',
+  },
+  {
+    dimension: 'Current repo status',
+    pkey: 'Current private-key baseline',
+    pubkey: 'Research-only prototype, tiny n, conceptual clarity over cryptographic realism',
+    bitcoin: 'Real production protocol',
+  },
+  {
+    dimension: 'Main caveat',
+    pkey: 'Trusted/private verifier quorum',
+    pubkey: 'Current public key publishes enough structure to reconstruct an accepting note',
+    bitcoin: 'Requires network fees, block inclusion, and probabilistic finality',
+  },
+]
+
 type Theme = 'light' | 'dark'
 
 const getInitialTheme = (): Theme => {
@@ -199,6 +262,7 @@ function App() {
           <div className="header-controls">
             <nav className="site-nav" aria-label="Primary navigation">
               <a href="#intro" onClick={handleMobileNavClick}>Intro</a>
+              <a href="#comparison" onClick={handleMobileNavClick}>Compare</a>
               <a href="#history" onClick={handleMobileNavClick}>History</a>
               <a href="#references" onClick={handleMobileNavClick}>References</a>
               <a href="#contact" onClick={handleMobileNavClick}>Join</a>
@@ -292,6 +356,64 @@ function App() {
               note-family comparison, and architecture documentation—not near-term production deployment.
             </p>
           </article>
+        </section>
+
+        <section className="section" id="comparison">
+          <div className="section-copy">
+            <p className="section-kicker">Comparison</p>
+            <p className="section-body">
+              The repo has three useful mental models: the current private-key quorum baseline,
+              the research-only public-key hidden-subspace track, and Bitcoin's production UTXO
+              transaction model.
+            </p>
+          </div>
+
+          <div className="comparison-table-wrap" role="region" aria-label="QMoney and Bitcoin comparison" tabIndex={0}>
+            <table className="comparison-table">
+              <thead>
+                <tr>
+                  <th scope="col">Dimension</th>
+                  <th scope="col">pkey_quorum</th>
+                  <th scope="col">pubkey_hidden_subspace</th>
+                  <th scope="col">Standard BTC transaction</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonRows.map((row) => (
+                  <tr key={row.dimension}>
+                    <th scope="row">{row.dimension}</th>
+                    <td>{row.pkey}</td>
+                    <td>{row.pubkey}</td>
+                    <td>{row.bitcoin}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="comparison-explainer">
+            <article className="panel panel-strong">
+              <p className="panel-label">Mental model</p>
+              <h3>Private notes, public-verification research, and public ledger money are different layers.</h3>
+              <p>
+                pkey_quorum is private-banknote-style money built around bill serials, BB84 qubits,
+                quorum-held secrets, and verify-and-remint transfers. pubkey_hidden_subspace explores
+                public verification with hidden-subspace notes, but it is intentionally not a deployable
+                unforgeability claim yet. Bitcoin is classical ledger money: UTXOs, signatures, public
+                validation, and consensus inclusion.
+              </p>
+            </article>
+
+            <article className="panel warning-panel comparison-caveat">
+              <p className="panel-label">Key caveat</p>
+              <h3>The hidden-subspace prototype is research-only.</h3>
+              <p>
+                Its current public key publishes enough structure to reconstruct an accepting note in
+                software. That makes it useful for studying the public-verification workflow, not for
+                claiming production-grade public-key quantum money.
+              </p>
+            </article>
+          </div>
         </section>
 
         <section className="section" id="history">

@@ -61,10 +61,18 @@ describe('App', () => {
     expect(siteMenu).toHaveAttribute('hidden')
   })
 
-  it('surfaces intro, history, and current references from the readme', () => {
+  it('surfaces intro, comparison, history, and current references from the readme', () => {
     render(<App />)
 
     expect(screen.getAllByText(/work-in-progress research repo for distributed private-key quantum cash/i).length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: /open site menu/i }))
+    expect(within(screen.getByRole('region', { name: /site navigation panel/i })).getByRole('link', { name: /compare/i })).toHaveAttribute(
+      'href',
+      '#comparison',
+    )
+    expect(screen.getByRole('region', { name: /qmoney and bitcoin comparison/i })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: /pubkey_hidden_subspace/i })).toBeInTheDocument()
+    expect(screen.getByText(/public-verification workflow, not for claiming production-grade public-key quantum money/i)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /historical background/i })).toBeInTheDocument()
     expect(screen.getByText(/wiesner wrote the core idea in the late 1960s/i)).toBeInTheDocument()
     expect(screen.getByText(/these are the current architecture and research references highlighted in the readme/i)).toBeInTheDocument()

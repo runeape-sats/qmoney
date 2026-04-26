@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""QMoney quorum + MPS (D=1) demo.
+"""QMoney quorum + BB84 symbolic demo.
 
 This is a pure software simulator for the Appendix-A design in README.md:
-- Bills are BB84 product states (MPS bond dimension D=1).
+- The default bill size is 512 qubits.
+- Bills are simulated symbolically as BB84 product states.
 - A verifier quorum holds the secret bases/bits for each serial.
 - Verification consumes the submitted bill; on success the quorum re-mints a fresh bill to the receiver.
 
@@ -16,9 +17,13 @@ import math
 import random
 import secrets
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 Qubit = Tuple[complex, complex]  # (alpha, beta) in computational basis
+
+DEFAULT_QUBITS = 512
+SUPPORTED_QUBIT_COUNTS = (32, 128, 512, 1024)
+SIMULATION_SETUP = "BB84 symbolic product-state private-key quorum"
 
 _SQRT2 = math.sqrt(2.0)
 
@@ -92,6 +97,31 @@ class BillSecret:
     bits: List[int]  # expected measurement results
 
 
+@dataclass(frozen=True)
+class VerificationSample:
+    accepted: bool
+    matches: int
+    measured: int
+
+
+@dataclass(frozen=True)
+class CounterfeitPairTrial:
+    first: VerificationSample
+    second: VerificationSample
+
+    @property
+    def pair_accepted(self) -> bool:
+        return self.first.accepted and self.second.accepted
+
+
+@dataclass(frozen=True)
+class AdaptiveProbeResult:
+    index: int
+    basis_guess: int
+    bit_guess: int
+    verification: VerificationSample
+
+
 class Ledger:
     def __init__(self) -> None:
         self._spent: set[str] = set()
@@ -100,7 +130,7 @@ class Ledger:
     def register(self, serial: str, owner: str) -> None:
         self._owner[serial] = owner
 
-    def owner_of(self, serial: str) -> str | None:
+    def owner_of(self, serial: str) -> Optional[str]:
         return self._owner.get(serial)
 
     def is_spent(self, serial: str) -> bool:
@@ -177,8 +207,8 @@ class QuorumService:
         ledger: Ledger,
         tolerance: int = 0,
         noise_bitflip_p: float = 0.0,
-        seed: int | None = None,
-    ) -> Tuple[bool, Bill | None]:
+        seed: Optional[int] = None,
+    ) -> Tuple[bool, Optional[Bill]]:
         if ledger.is_spent(bill.serial):
             return False, None
         if ledger.owner_of(bill.serial) != claimant:
@@ -234,9 +264,103 @@ def counterfeit_intercept_resend(bill: Bill, rng: random.Random) -> Bill:
     return Bill(serial=bill.serial, qubits=forged_qubits)
 
 
+def clone_bill(bill: Bill) -> Bill:
+    """Return a Bill with a separate qubit list; individual qubit tuples are immutable."""
+    return Bill(serial=bill.serial, qubits=list(bill.qubits))
+
+
+def evaluate_bill_against_secret(
+    bill: Bill,
+    secret: BillSecret,
+    *,
+    tolerance: int = 0,
+    noise_bitflip_p: float = 0.0,
+    seed: Optional[int] = None,
+) -> VerificationSample:
+    if bill.n != len(secret.basis) or bill.n != len(secret.bits):
+        raise ValueError("bill and secret dimensions must match")
+    if tolerance < 0 or tolerance > bill.n:
+        raise ValueError("tolerance must be in [0, n]")
+
+    rng = random.Random(seed)
+    matches = 0
+    for i, qubit in enumerate(bill.qubits):
+        noisy = maybe_bitflip(qubit, noise_bitflip_p, rng)
+        outcome, collapsed = measure_in_basis(noisy, secret.basis[i], rng)
+        bill.qubits[i] = collapsed
+        if outcome == secret.bits[i]:
+            matches += 1
+
+    return VerificationSample(
+        accepted=matches >= bill.n - tolerance,
+        matches=matches,
+        measured=bill.n,
+    )
+
+
+def one_note_to_two_counterfeit_trial(
+    bill: Bill,
+    secret: BillSecret,
+    rng: random.Random,
+    *,
+    tolerance: int = 0,
+    noise_bitflip_p: float = 0.0,
+) -> CounterfeitPairTrial:
+    forged = counterfeit_intercept_resend(clone_bill(bill), rng)
+    first = clone_bill(forged)
+    second = clone_bill(forged)
+    return CounterfeitPairTrial(
+        first=evaluate_bill_against_secret(
+            first,
+            secret,
+            tolerance=tolerance,
+            noise_bitflip_p=noise_bitflip_p,
+            seed=rng.getrandbits(64),
+        ),
+        second=evaluate_bill_against_secret(
+            second,
+            secret,
+            tolerance=tolerance,
+            noise_bitflip_p=noise_bitflip_p,
+            seed=rng.getrandbits(64),
+        ),
+    )
+
+
+def adaptive_replacement_probe(
+    bill: Bill,
+    secret: BillSecret,
+    *,
+    index: int,
+    basis_guess: int,
+    bit_guess: int,
+    tolerance: int = 0,
+    seed: Optional[int] = None,
+) -> AdaptiveProbeResult:
+    if index < 0 or index >= bill.n:
+        raise ValueError("index must be in [0, n)")
+    candidate = clone_bill(bill)
+    candidate.qubits[index] = prepare_bb84(basis_guess, bit_guess)
+    return AdaptiveProbeResult(
+        index=index,
+        basis_guess=basis_guess,
+        bit_guess=bit_guess,
+        verification=evaluate_bill_against_secret(candidate, secret, tolerance=tolerance, seed=seed),
+    )
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="QMoney quorum + MPS (D=1) software demo")
-    parser.add_argument("--n", type=int, default=512, choices=[32, 128, 512, 1024])
+    parser = argparse.ArgumentParser(
+        description=f"QMoney {SIMULATION_SETUP} software demo",
+        epilog=f"Defaults: --n {DEFAULT_QUBITS}; setup: {SIMULATION_SETUP}.",
+    )
+    parser.add_argument(
+        "--n",
+        type=int,
+        default=DEFAULT_QUBITS,
+        choices=SUPPORTED_QUBIT_COUNTS,
+        help=f"number of BB84 qubits per bill (default: {DEFAULT_QUBITS})",
+    )
     parser.add_argument("--nodes", type=int, default=4, help="quorum size N")
     parser.add_argument("--threshold", type=int, default=3, help="minimum live participants required to attempt verification")
     parser.add_argument("--tolerance", type=int, default=0, help="allowed mismatches")
@@ -245,6 +369,8 @@ def main() -> int:
     parser.add_argument("--forge-trials", type=int, default=0, help="run intercept/resend forge trials (use small n)")
 
     args = parser.parse_args()
+
+    print(f"setup={SIMULATION_SETUP}; qubits={args.n}")
 
     nodes = [QuorumNode(i) for i in range(args.nodes)]
     quorum = QuorumService(nodes, threshold=args.threshold)
