@@ -13,7 +13,7 @@ except ImportError:
     sat = None
 
     def _missing_z3(*_args, **_kwargs):
-        raise NotImplementedError("Z3 backend is unavailable; install z3-solver to use symbolic checks directly")
+        raise NotImplementedError("Z3 backend is unavailable; install z3-solver via pip to use symbolic checks directly")
 
     And = Bool = BoolVal = If = Int = Not = Or = Solver = _missing_z3
 
