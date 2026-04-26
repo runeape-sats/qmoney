@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from itertools import product
 from typing import Callable, Dict, List
 
 try:
@@ -12,6 +11,7 @@ try:
 except ImportError:
     HAVE_Z3 = False
     Z3_SAT = None
+    And = Bool = BoolVal = If = Int = Not = Or = Solver = None
 
 
 NOTE_UNISSUED = 0
@@ -287,6 +287,8 @@ class ConcreteState:
 
 
 def _concrete_states() -> List[ConcreteState]:
+    from itertools import product
+
     return [
         ConcreteState(*values)
         for values in product(

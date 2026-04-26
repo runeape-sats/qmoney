@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 from .note_family import HiddenSubspacePublicKey, Vector
 
@@ -44,7 +44,7 @@ class OraclePublication:
 @dataclass
 class OracleRegistry:
     _publications: Dict[str, OraclePublication] = field(default_factory=dict)
-    _query_log: list[OracleQueryRecord] = field(default_factory=list)
+    _query_log: List[OracleQueryRecord] = field(default_factory=list)
 
     def publish(self, public_key: HiddenSubspacePublicKey) -> OraclePublication:
         publication = OraclePublication.from_public_key(public_key)
