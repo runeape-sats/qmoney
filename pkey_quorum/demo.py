@@ -16,7 +16,7 @@ import math
 import random
 import secrets
 from dataclasses import dataclass
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 Qubit = Tuple[complex, complex]  # (alpha, beta) in computational basis
 
@@ -125,7 +125,7 @@ class Ledger:
     def register(self, serial: str, owner: str) -> None:
         self._owner[serial] = owner
 
-    def owner_of(self, serial: str) -> str | None:
+    def owner_of(self, serial: str) -> Optional[str]:
         return self._owner.get(serial)
 
     def is_spent(self, serial: str) -> bool:
@@ -202,8 +202,8 @@ class QuorumService:
         ledger: Ledger,
         tolerance: int = 0,
         noise_bitflip_p: float = 0.0,
-        seed: int | None = None,
-    ) -> Tuple[bool, Bill | None]:
+        seed: Optional[int] = None,
+    ) -> Tuple[bool, Optional[Bill]]:
         if ledger.is_spent(bill.serial):
             return False, None
         if ledger.owner_of(bill.serial) != claimant:
@@ -270,7 +270,7 @@ def evaluate_bill_against_secret(
     *,
     tolerance: int = 0,
     noise_bitflip_p: float = 0.0,
-    seed: int | None = None,
+    seed: Optional[int] = None,
 ) -> VerificationSample:
     if bill.n != len(secret.basis) or bill.n != len(secret.bits):
         raise ValueError("bill and secret dimensions must match")
@@ -330,7 +330,7 @@ def adaptive_replacement_probe(
     basis_guess: int,
     bit_guess: int,
     tolerance: int = 0,
-    seed: int | None = None,
+    seed: Optional[int] = None,
 ) -> AdaptiveProbeResult:
     if index < 0 or index >= bill.n:
         raise ValueError("index must be in [0, n)")

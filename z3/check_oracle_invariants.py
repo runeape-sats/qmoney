@@ -5,7 +5,7 @@ from dataclasses import dataclass, fields
 from typing import Callable, Dict, List
 
 try:
-    from z3 import And, Bool, BoolVal, If, Int, Not, Or, Solver, sat
+    from z3 import And, Bool, BoolVal, If, Implies, Int, Not, Or, Solver, sat
 
     HAVE_Z3 = True
 except ImportError:
@@ -15,7 +15,7 @@ except ImportError:
     def _missing_z3(*_args, **_kwargs):
         raise NotImplementedError("Z3 backend is unavailable; install z3-solver via pip to use symbolic checks directly")
 
-    And = Bool = BoolVal = If = Int = Not = Or = Solver = _missing_z3
+    And = Bool = BoolVal = If = Implies = Int = Not = Or = Solver = _missing_z3
 
 
 NOTE_UNISSUED = 0
