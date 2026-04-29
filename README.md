@@ -230,7 +230,22 @@ The current simulator keeps the note family intentionally simple:
 - very low entanglement
 - MPS-friendly scaling for larger software-only experiments
 
-This is a useful private-key baseline, not a claim of true public-key quantum money.
+### BB84 abstraction: simulator vs quantum hardware
+
+For the current baseline, BB84 only requires:
+- preparation in the `Z` or `X` basis
+- basis-dependent measurement
+- classical reconciliation about which basis was used
+
+The important distinction is:
+- **classical simulator** = models those qubits and measurements as software objects and computed probabilities
+- **quantum hardware** = prepares and measures real physical qubits, so disturbance, noise, and loss happen in the physical system
+
+In other words:
+- a **classical simulator models BB84**
+- **quantum hardware performs BB84**
+
+This repo's current baseline is a **classical simulator** for a BB84-style private-key note family. It is a useful research and engineering environment, not a claim that the current implementation already runs on production quantum hardware.
 
 A useful baseline attack model for this simulator family is the **simple one-note-to-two-notes counterfeiting attack** analyzed by Molina, Vidick, and Watrous (2012): given one valid note, what is the best probability of producing two notes that both pass verification? See [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md).
 
