@@ -10,7 +10,7 @@ Default simulator setup:
 
 Current entrypoint:
 - `demo.py` — BB84/product-state minting, quorum verification, verify-and-remint,
-  simple intercept/resend counterfeit experiments, one-note-to-two-note counterfeit
+  simple intercept/resend counterfeit experiments, one-note-to-two-notes counterfeit
   trials, and adaptive replacement probes for verifier-leakage testing
 
 What belongs here:
