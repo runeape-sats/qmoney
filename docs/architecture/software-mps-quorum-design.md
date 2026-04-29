@@ -239,7 +239,11 @@ For this baseline note family, the simulator only needs:
 - beyond that, low-entanglement tensor-network / MPS methods become the natural route
 - for this specific product-state note family, bond dimension stays `D=1` unless the design is changed to introduce entanglement
 
-That is why the repo can legitimately target larger software-only qubit counts while keeping the current note family simple.
+### Classical simulator requirement vs quantum hardware requirement
+- **Classical requirement:** enough conventional compute and memory to simulate the logical qubit count of interest; dense state-vector methods top out around `30–32` logical qubits before MPS/tensor-network methods become preferable.
+- **Quantum hardware requirement:** enough real, controllable logical qubits to prepare, preserve, and measure the target note family with acceptable noise and loss.
+
+That is why the repo can legitimately target larger software-only qubit counts while keeping the current note family simple, while still being honest that real hardware deployment is a different requirement boundary.
 
 ---
 

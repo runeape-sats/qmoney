@@ -31,6 +31,16 @@ The bill is secure against simple counterfeiting because an adversary does **not
 
 This is the core reason the current system is **private-key** at the quantum layer.
 
+#### Classical simulator vs quantum hardware
+For this BB84-style abstraction, the current repo should distinguish two very different execution modes:
+
+- **Classical simulator:** qubits are represented as software state, measurement outcomes are computed, and eavesdropping/noise are modeled by the program.
+- **Quantum hardware:** qubits are real physical states, measurements are physically performed, and disturbance/noise/loss arise in the hardware and channel itself.
+
+So the honest statement is:
+- the current repo **simulates** BB84-style quantum money behavior
+- it does **not** yet implement the note family on real quantum hardware
+
 ### 1.2 Classical ledger / ownership layer
 Separately, QMoney uses ordinary classical cryptographic ideas for:
 - ownership identity
