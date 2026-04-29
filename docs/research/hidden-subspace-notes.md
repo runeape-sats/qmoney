@@ -40,6 +40,10 @@ That separation is important because hidden-subspace money is a **different note
 - `HiddenSubspaceMint.from_generators(serial, generators)`
 - `HiddenSubspaceMint.mint_note()`
 - `HiddenSubspacePublicKey.verify(note)`
+- `OracleRegistry.publish(public_key)`
+- `OracleRegistry.query_subspace(serial, vector, candidate_kind)`
+- `OracleRegistry.query_dual(serial, vector, candidate_kind)`
+- `HiddenSubspaceVerifier.verify(note, public_key)`
 - `hadamard_transform(note)`
 - `basis_state(dimension, basis, serial=...)`
 
@@ -73,6 +77,15 @@ The current oracle-focused invariants are:
 - subspace/dual query tags match the published oracle domain
 
 This gives QMoney an initial state-machine artifact for reasoning about verifier outcomes and oracle-consistency safety properties while the mathematical simulator stays in Python.
+
+## Runtime oracle/verifier split
+
+The public-key research runtime now separates:
+- `note_family.py` for state-vector note-family math
+- `oracles.py` for oracle publication state, subspace/dual queries, and query logging
+- `verifier.py` for the verifier workflow that requires prior oracle publication
+
+This mirrors the architecture workflow: note-family math should not silently absorb lifecycle/oracle behavior.
 
 ## Canonical workflow
 

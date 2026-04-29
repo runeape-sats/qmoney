@@ -2,9 +2,16 @@ import math
 import unittest
 
 from pubkey_hidden_subspace import (
+    AUTHENTIC_CANDIDATE,
+    COUNTERFEIT_CANDIDATE,
+    DUAL_QUERY,
     HiddenSubspaceMint,
     HiddenSubspaceNote,
+    HiddenSubspaceVerifier,
     HiddenSubspacePublicKey,
+    OraclePublicationError,
+    OracleRegistry,
+    SUBSPACE_QUERY,
     basis_state,
     hadamard_transform,
 )
@@ -65,6 +72,87 @@ class HiddenSubspaceMoneyTests(unittest.TestCase):
         )
 
         self.assertTrue(self.public_key.verify(forged))
+
+    def test_oracle_registry_requires_publication_before_queries(self):
+        registry = OracleRegistry()
+
+        with self.assertRaises(OraclePublicationError):
+            registry.query_subspace("note-1", (0, 0, 0), AUTHENTIC_CANDIDATE)
+
+    def test_oracle_registry_logs_subspace_and_dual_queries(self):
+        registry = OracleRegistry()
+        registry.publish(self.public_key)
+
+        self.assertTrue(registry.query_subspace("note-1", (0, 0, 0), AUTHENTIC_CANDIDATE))
+        self.assertFalse(registry.query_dual("note-1", (1, 0, 0), COUNTERFEIT_CANDIDATE))
+
+        self.assertEqual([record.kind for record in registry.query_log], [SUBSPACE_QUERY, DUAL_QUERY])
+        self.assertEqual([record.serial for record in registry.query_log], ["note-1", "note-1"])
+
+    def test_oracle_registry_publish_is_idempotent_for_matching_publication(self):
+        registry = OracleRegistry()
+
+        first_publication = registry.publish(self.public_key)
+        second_publication = registry.publish(self.public_key)
+
+        self.assertIs(first_publication, second_publication)
+
+    def test_oracle_registry_rejects_conflicting_republication_for_same_serial(self):
+        registry = OracleRegistry()
+        conflicting_public_key = HiddenSubspaceMint.from_generators(
+            serial="note-1",
+            generators=((1, 0, 0),),
+        ).public_key
+        registry.publish(self.public_key)
+
+        with self.assertRaises(OraclePublicationError):
+            registry.publish(conflicting_public_key)
+
+    def test_oracle_backed_verifier_requires_publication_before_acceptance(self):
+        verifier = HiddenSubspaceVerifier(OracleRegistry())
+
+        decision = verifier.verify(self.note, self.public_key)
+
+        self.assertFalse(decision.accepted)
+        self.assertEqual(decision.reason, "oracle_not_published")
+
+    def test_oracle_backed_verifier_rejects_publication_mismatch(self):
+        registry = OracleRegistry()
+        conflicting_public_key = HiddenSubspaceMint.from_generators(
+            serial="note-1",
+            generators=((1, 0, 0),),
+        ).public_key
+        registry.publish(conflicting_public_key)
+        verifier = HiddenSubspaceVerifier(registry)
+
+        decision = verifier.verify(self.note, self.public_key)
+
+        self.assertFalse(decision.accepted)
+        self.assertEqual(decision.reason, "oracle_publication_mismatch")
+        self.assertEqual(registry.query_log, ())
+
+    def test_oracle_backed_verifier_accepts_authentic_note_and_logs_queries(self):
+        registry = OracleRegistry()
+        registry.publish(self.public_key)
+        verifier = HiddenSubspaceVerifier(registry)
+
+        decision = verifier.verify(self.note, self.public_key)
+
+        self.assertTrue(decision.accepted)
+        self.assertEqual(decision.reason, "accepted")
+        self.assertTrue(any(record.kind == SUBSPACE_QUERY for record in registry.query_log))
+        self.assertTrue(any(record.kind == DUAL_QUERY for record in registry.query_log))
+
+    def test_oracle_backed_verifier_rejects_basis_state_counterfeit(self):
+        registry = OracleRegistry()
+        registry.publish(self.public_key)
+        verifier = HiddenSubspaceVerifier(registry)
+        counterfeit = basis_state(self.public_key.dimension, (1, 0, 1), serial="note-1")
+
+        decision = verifier.verify(counterfeit, self.public_key, candidate_kind=COUNTERFEIT_CANDIDATE)
+
+        self.assertFalse(decision.accepted)
+        self.assertEqual(decision.reason, "dual_oracle_rejected")
 
 
 if __name__ == "__main__":

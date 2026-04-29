@@ -19,6 +19,7 @@ class OracleInvariantZ3Tests(unittest.TestCase):
         self.assertEqual(report["result"], "all_passed")
         self.assertGreater(len(report["checks"]), 0)
         self.assertTrue(all(check["result"] == "unsat" for check in report["checks"]))
+        self.assertTrue(all("backend" in check for check in report["checks"]))
 
     def test_expected_oracle_invariants_are_covered(self):
         report = check_all_invariants()
@@ -31,6 +32,8 @@ class OracleInvariantZ3Tests(unittest.TestCase):
                 "oracle_tables_stay_coupled",
                 "queries_only_reference_issued_serials",
                 "query_answers_respect_oracle_rule",
+                "subspace_queries_tagged_correctly",
+                "dual_queries_tagged_correctly",
             },
         )
 
