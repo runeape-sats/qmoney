@@ -31,7 +31,7 @@ Per the current repo architecture, QMoney today is:
 Important repo-aligned boundaries:
 - `pkey_quorum/` is the current private-key baseline.
 - `pubkey_hidden_subspace/` is a separate research track for future public-key experiments.
-- `docs/architecture/qmoney-pkey-polarizer-experiment.md` explicitly frames the polarizer story as an **analogy**, not a literal claim that the current code already runs on optical hardware.
+- `docs/polarizer/qmoney-pkey-polarizer-experiment.md` explicitly frames the polarizer story as an **analogy**, not a literal claim that the current code already runs on optical hardware.
 
 That means a polarizer demo should be presented as a visualization of the **private-key path**, not the public-key research path.
 
