@@ -25,3 +25,4 @@ metadir/
 
 # Local planning / transcript scratchpad material
 docs/plans/
+.hermes/
