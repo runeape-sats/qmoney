@@ -1,8 +1,8 @@
 # QMoney: A Peer-to-Peer Quantum Money System
 
-The idea of quantum money has been around since the 70s-80s. It is the right time to revisit and turn it into an alternative form of freedom money. Ideally, QMoney (quantum money implementation suggested here) serves like the other side of Bitcoin (i.e., yin and yang). As Bitcoin security being weaker compared to current quantum computing technology development, QMoney becomes stronger because it is more feasible to implement QMoney as more logical qubits are avaiable to daily users.
+Quantum money has been studied since the late 1960s and early 1980s. QMoney revisits that line of work as a research program: can quantum no-cloning become an anti-counterfeiting layer for future cash-like systems while classical cryptographic ledgers handle ownership, settlement, and finality?
 
-QMoney is a _work-in-progress_ research repo for "distributed private-key quantum cash" inspired by:
+This repository is **not** a production currency, token, wallet, or hardware implementation. It is a _work-in-progress_ simulator and architecture workspace for "distributed private-key quantum cash" inspired by:
 
 - **[Stephen Wiesner](https://scottaaronson.blog/?p=5730) / [Peter Shor](https://math.mit.edu/~shor/)'s quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
 - **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf)'s private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
@@ -183,7 +183,7 @@ This repo is a research and simulation workspace for:
 Near-term value here is primarily:
 - conceptual clarity
 - simulator design
-- attack modeling
+- attack modeling and private-key quorum threat modeling
 - note-family comparison
 - architecture documentation
 
@@ -197,6 +197,7 @@ not near-term deployment of production quantum money.
 - [`docs/architecture/public-vs-private-key-qmoney.md`](docs/architecture/public-vs-private-key-qmoney.md) — canonical statement of the current repo architecture and why QMoney is private-key quantum cash rather than public-key quantum money.
 - [`docs/architecture/software-mps-quorum-design.md`](docs/architecture/software-mps-quorum-design.md) — preserved technical appendix for the current software-only MPS/quorum baseline, including data model, protocol flow, simulation assumptions, and security intuition.
 - [`docs/architecture/classical-simulation-hardware-breakdown.md`](docs/architecture/classical-simulation-hardware-breakdown.md) — RAM/VRAM breakdown for MPS, sparse state-vector, and BB84 symbolic simulation approaches.
+- [`docs/architecture/private-key-quorum-threat-model.md`](docs/architecture/private-key-quorum-threat-model.md) — first-pass threat model for the current private-key quorum baseline, including adversary classes, quorum semantics, remint failure modes, and noise/tolerance questions.
 - [`docs/architecture/public-key-implementation-workflow.md`](docs/architecture/public-key-implementation-workflow.md) — implementation source of truth for AI agents and human implementers extending the public-key/oracle track in any language.
 
 ### Research notes

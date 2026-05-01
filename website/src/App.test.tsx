@@ -80,6 +80,11 @@ describe('App', () => {
       'href',
       'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-vs-private-key-qmoney.md',
     )
+    expect(screen.getByText(/threat model for the private-key quorum baseline/i)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /private-key quorum threat model/i })).toHaveAttribute(
+      'href',
+      'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/private-key-quorum-threat-model.md',
+    )
     expect(screen.getByRole('link', { name: /ekert quantum cryptography and qmoney/i })).toHaveAttribute(
       'href',
       'https://github.com/runeape-sats/qmoney/blob/main/docs/research/ekert-quantum-cryptography-and-qmoney.md',

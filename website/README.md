@@ -1,73 +1,65 @@
-# React + TypeScript + Vite
+# QMoney website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This folder contains the Vite + React + TypeScript landing page for QMoney.
 
-Currently, two official plugins are available:
+The site is a public explanation layer for the repository. It should keep the same boundaries as the core docs:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- QMoney is currently a **work-in-progress research project**, not a production token, wallet, or currency.
+- The implemented baseline is **distributed private-key quantum cash** with verify-and-remint semantics.
+- The public-key hidden-subspace path is a **research-only prototype** and not a deployable unforgeability claim.
+- Bitcoin is used as a settlement/finality reference point, not as a claim that QMoney is already “quantum Bitcoin.”
 
-## React Compiler
+## Local development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Install dependencies from this folder:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm ci
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Run the development server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Build the static site:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview -- --host 127.0.0.1 --port 4173
+```
+
+## Verification
+
+Before committing website changes, run:
+
+```bash
+npm run build
+npm run lint
+npm run test
+```
+
+Current test coverage lives in `src/App.test.tsx` and checks the main messaging, reference links, theme behavior, and menu interactions.
+
+## Content rules
+
+When editing the website copy:
+
+1. Preserve the distinction between the private-key baseline and public-key research track.
+2. Avoid implying that the current repo implements production quantum hardware.
+3. Avoid implying that the hidden-subspace prototype is secure public-key quantum money.
+4. Keep “verify-and-remint” visible as the current transfer model.
+5. Link deeper claims back to the repository docs, especially:
+   - `docs/architecture/public-vs-private-key-qmoney.md`
+   - `docs/architecture/private-key-quorum-threat-model.md`
+   - `docs/research/latest-quantum-money-literature-and-qmoney.md`
+
+## Deployment note
+
+This is a static Vite site. `npm run build` writes output to `dist/`. The generated `dist/` directory is intentionally ignored by git.

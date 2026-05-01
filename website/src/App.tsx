@@ -40,6 +40,11 @@ const currentReferences = [
         description: 'Technical appendix for the current software-only MPS/quorum baseline and protocol flow.',
       },
       {
+        title: 'Private-key quorum threat model',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/private-key-quorum-threat-model.md',
+        description: 'Threat model for the private-key quorum baseline, including adversaries, quorum assumptions, remint failure modes, and noise/tolerance questions.',
+      },
+      {
         title: 'Public-key implementation workflow',
         href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-key-implementation-workflow.md',
         description: 'Implementation source of truth for the future public-key/oracle track.',
