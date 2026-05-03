@@ -471,6 +471,16 @@
   gap: 14px;
 }
 
+@media (min-width: 901px) {
+  .reference-panel:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .reference-panel:last-child .reference-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .reference-link {
   display: grid;
   gap: 6px;
