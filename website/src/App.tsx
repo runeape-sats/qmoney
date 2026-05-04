@@ -252,6 +252,21 @@ function GithubIcon() {
   )
 }
 
+function LinkIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon card-link-icon">
+      <path
+        d="M10.6 13.4a4 4 0 0 0 5.7 0l2.1-2.1a4 4 0 0 0-5.7-5.7l-1.2 1.2M13.4 10.6a4 4 0 0 0-5.7 0l-2.1 2.1a4 4 0 0 0 5.7 5.7l1.2-1.2"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  )
+}
+
 function MenuIcon({ open }: { open: boolean }) {
   if (open) {
     return (
@@ -508,7 +523,10 @@ function App() {
                 <div className="reference-list">
                   {group.items.map((item) => (
                     <a className="reference-link" href={item.href} key={item.href} target="_blank" rel="noreferrer">
-                      <span className="reference-title">{item.title}</span>
+                      <span className="reference-title-row">
+                        <span className="reference-title">{item.title}</span>
+                        <LinkIcon />
+                      </span>
                       <span className="reference-description">{item.description}</span>
                     </a>
                   ))}

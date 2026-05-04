@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import App from './App'
 
+const referenceLinkCount = 18
+
 describe('App', () => {
   it('renders the qmoney logo and github repo link inside the expandable header panel', () => {
     render(<App />)
@@ -102,5 +104,13 @@ describe('App', () => {
       'href',
       'https://github.com/runeape-sats/qmoney/blob/main/docs/research/ekert-quantum-cryptography-and-qmoney.md',
     )
+  })
+
+  it('adds a small destination link icon to every reference card link', () => {
+    const { container } = render(<App />)
+
+    expect(container.querySelectorAll('.reference-link')).toHaveLength(referenceLinkCount)
+    expect(container.querySelectorAll('.reference-link .card-link-icon')).toHaveLength(referenceLinkCount)
+    expect(screen.getByRole('link', { name: /bitcoin whitepaper/i })).toBeInTheDocument()
   })
 })
