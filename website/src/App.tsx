@@ -40,6 +40,11 @@ const currentReferences = [
         description: 'Technical appendix for the current software-only MPS/quorum baseline and protocol flow.',
       },
       {
+        title: 'Classical simulation hardware breakdown',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/classical-simulation-hardware-breakdown.md',
+        description: 'RAM and VRAM breakdown for MPS, sparse state-vector, and BB84 symbolic simulation approaches.',
+      },
+      {
         title: 'Private-key quorum threat model',
         href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/private-key-quorum-threat-model.md',
         description: 'Threat model for the private-key quorum baseline, including adversaries, quorum assumptions, remint failure modes, and noise/tolerance questions.',
@@ -52,17 +57,52 @@ const currentReferences = [
     ],
   },
   {
-    category: 'Research',
+    category: 'Foundational papers',
     items: [
       {
-        title: 'Latest quantum money literature and QMoney',
-        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/latest-quantum-money-literature-and-qmoney.md',
-        description: 'Survey of the most relevant recent literature for QMoney’s architecture and research direction.',
+        title: 'Stephen Wiesner: Conjugate Coding context',
+        href: 'https://scottaaronson.blog/?p=5730',
+        description: 'Scott Aaronson’s memorial post on Wiesner and the early history of quantum money.',
       },
       {
-        title: 'Quantum money literature roadmap',
-        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/quantum-money-literature-roadmap.md',
-        description: 'Ranked reading and prototyping roadmap for what QMoney should study, build, monitor, and avoid next.',
+        title: 'Bitcoin whitepaper',
+        href: 'https://bitcoin.org/bitcoin.pdf',
+        description: 'Satoshi Nakamoto’s peer-to-peer electronic cash paper, the classical settlement reference point for QMoney.',
+      },
+      {
+        title: 'Quantum Money from Hidden Subspaces',
+        href: 'https://www.scottaaronson.com/papers/moneyfull.pdf',
+        description: 'Aaronson and Christiano’s public-key quantum money paper that frames QMoney’s future public-verification research track.',
+      },
+      {
+        title: 'Optimal counterfeiting attacks',
+        href: 'https://arxiv.org/abs/1202.4010',
+        description: 'Molina, Vidick, and Watrous on one-note-to-two-notes counterfeiting attacks for Wiesner-style quantum money.',
+      },
+      {
+        title: 'Quantum Money from Abelian Group Actions',
+        href: 'https://arxiv.org/abs/2307.12120',
+        description: 'Zhandry’s group-action construction, one of the newer public-key directions tracked by the README.',
+      },
+      {
+        title: 'Noise-tolerant public-key quantum money',
+        href: 'https://arxiv.org/abs/2407.06463',
+        description: 'Yuen’s classical-oracle direction that the README flags as promising for future formal/oracle workflow.',
+      },
+    ],
+  },
+  {
+    category: 'Research notes',
+    items: [
+      {
+        title: 'Shor arguments and QMoney integration',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/shor-arguments-and-qmoney-integration.md',
+        description: 'How Peter Shor’s arguments shape QMoney’s architecture split, terminology, and public-key research boundaries.',
+      },
+      {
+        title: 'Aaronson private-key quantum money and QMoney',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/aaronson-private-key-quantum-money-and-qmoney.md',
+        description: 'Transcript-backed note on adaptive-query security, compact-secret tradeoffs, and QMoney’s private-key lineage.',
       },
       {
         title: 'Wiesner counterfeiting attacks and QMoney',
@@ -70,9 +110,24 @@ const currentReferences = [
         description: 'Why one-note-to-two-notes counterfeiting attacks are a strong fit for the current private-key baseline.',
       },
       {
+        title: 'Latest quantum money literature and QMoney',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/latest-quantum-money-literature-and-qmoney.md',
+        description: 'Survey of the most relevant recent literature for QMoney’s architecture and research direction.',
+      },
+      {
         title: 'Ekert quantum cryptography and QMoney',
         href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/ekert-quantum-cryptography-and-qmoney.md',
         description: 'Review of Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and what Ekert’s cryptography ideas imply for QMoney.',
+      },
+      {
+        title: 'Quantum money literature roadmap',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/quantum-money-literature-roadmap.md',
+        description: 'Ranked reading and prototyping roadmap for what QMoney should study, build, monitor, and avoid next.',
+      },
+      {
+        title: 'Note-family evaluation checklist',
+        href: 'https://github.com/runeape-sats/qmoney/blob/main/docs/research/note-family-evaluation-checklist.md',
+        description: 'Checklist for evaluating future note families across verifier leakage, coherence sensitivity, public/private status, and repo integration.',
       },
     ],
   },
@@ -441,8 +496,8 @@ function App() {
           <div className="section-copy">
             <p className="section-kicker">References</p>
             <p className="section-body">
-              These are the current architecture and research references highlighted in the README as
-              the best entry points for understanding where QMoney stands today.
+              These are the architecture notes, research notes, and foundational papers highlighted in
+              the README as the best entry points for understanding where QMoney stands today.
             </p>
           </div>
 

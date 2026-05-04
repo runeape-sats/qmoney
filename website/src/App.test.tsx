@@ -75,15 +75,28 @@ describe('App', () => {
     expect(screen.getByText(/public-verification workflow, not for claiming production-grade public-key quantum money/i)).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /historical background/i })).toBeInTheDocument()
     expect(screen.getByText(/wiesner wrote the core idea in the late 1960s/i)).toBeInTheDocument()
-    expect(screen.getByText(/these are the current architecture and research references highlighted in the readme/i)).toBeInTheDocument()
+    expect(screen.getByText(/architecture notes, research notes, and foundational papers highlighted in the readme/i)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /public vs private key qmoney/i })).toHaveAttribute(
       'href',
       'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/public-vs-private-key-qmoney.md',
     )
+    expect(screen.getByRole('link', { name: /classical simulation hardware breakdown/i })).toHaveAttribute(
+      'href',
+      'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/classical-simulation-hardware-breakdown.md',
+    )
+    expect(screen.getByRole('link', { name: /bitcoin whitepaper/i })).toHaveAttribute('href', 'https://bitcoin.org/bitcoin.pdf')
     expect(screen.getByText(/threat model for the private-key quorum baseline/i)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /private-key quorum threat model/i })).toHaveAttribute(
       'href',
       'https://github.com/runeape-sats/qmoney/blob/main/docs/architecture/private-key-quorum-threat-model.md',
+    )
+    expect(screen.getByRole('link', { name: /shor arguments and qmoney integration/i })).toHaveAttribute(
+      'href',
+      'https://github.com/runeape-sats/qmoney/blob/main/docs/research/shor-arguments-and-qmoney-integration.md',
+    )
+    expect(screen.getByRole('link', { name: /aaronson private-key quantum money and qmoney/i })).toHaveAttribute(
+      'href',
+      'https://github.com/runeape-sats/qmoney/blob/main/docs/research/aaronson-private-key-quantum-money-and-qmoney.md',
     )
     expect(screen.getByRole('link', { name: /ekert quantum cryptography and qmoney/i })).toHaveAttribute(
       'href',
