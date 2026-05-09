@@ -2,6 +2,13 @@
 
 This note reviews **Artur Ekert's quantum-cryptography work** and extracts the parts that are most relevant to QMoney.
 
+Primary materials used for this note:
+- Artur Ekert, *Quantum cryptography based on Bell's theorem* (1991)
+- Artur Ekert, *Bell Inequalities: From Curiosity to Security*, Okinawa School in Physics 2025 lecture
+  - Video: `https://www.youtube.com/watch?v=Fbcfx_vZyG0`
+  - Local transcript: [`transcripts/ekert-bell-inequalities-curiosity-to-security-transcript.md`](transcripts/ekert-bell-inequalities-curiosity-to-security-transcript.md)
+- Ekert-adjacent papers and talks on entanglement-based QKD, noisy-channel security, Bell witnesses, randomness, and measurement-independence assumptions
+
 ## Why this note exists
 
 QMoney already draws inspiration from:
@@ -32,7 +39,8 @@ Ekert's quantum-cryptography work is best understood as a sequence of moves:
 3. **1996:** entanglement purification / quantum privacy amplification makes noisy-channel security more realistic and more rigorous.
 4. **2000s:** Bell-based crypto can be generalized to richer systems, including higher-dimensional entangled states.
 5. **2010s onward:** Bell-based security must be analyzed under explicit assumptions such as measurement independence and randomness quality.
-6. **Recent talks/public framing:** Bell inequalities went from foundational curiosity to practical security infrastructure.
+6. **2025 OIST lecture:** Ekert presents the origin story as two research streams—cryptographic key-distribution needs and foundational Bell/randomness questions—converging into quantum cryptography.
+7. **Recent talks/public framing:** Bell inequalities went from foundational curiosity to practical security infrastructure.
 
 For QMoney, the most important conclusion is:
 
@@ -245,7 +253,47 @@ Architectural lesson:
 
 ---
 
-## 9. Recent framing: Bell inequalities from curiosity to security (2023–2025 talks)
+## 9. Transcript update: Bell Inequalities — From Curiosity to Security (OIST 2025 lecture)
+**Source:** Artur Ekert, *Bell Inequalities: From Curiosity to Security*, Okinawa School in Physics 2025. Local transcript: [`transcripts/ekert-bell-inequalities-curiosity-to-security-transcript.md`](transcripts/ekert-bell-inequalities-curiosity-to-security-transcript.md).
+
+### Main contribution
+The lecture is useful because Ekert narrates quantum cryptography as the merger of two previously separate lines of work:
+
+1. **The cryptographic line:** from ancient ciphers through polyalphabetic ciphers, Enigma, one-time pads, and the key-distribution problem.
+2. **The foundations line:** from Einstein's concern about quantum completeness through Bell inequalities, experimental Bell tests, CHSH games, and irreducible randomness.
+
+The key transcript-backed framing appears early in the lecture: Ekert says his Bell-inequality quantum-cryptography work “managed to bring the two branches together,” after Wiesner's conjugate coding and Bennett/Brassard's uncertainty-principle route to key distribution.
+
+### Why it mattered
+The lecture makes three details especially explicit:
+
+- **Perfect encryption pushes the problem into key distribution.** A one-time pad can be perfectly secure only if Alice and Bob already share fresh random key material; the hard operational problem is distributing that key and bounding what Eve may know.
+- **Privacy amplification is downstream of an adversary-information bound.** Ekert describes the crypto task as estimating the adversary's possible knowledge, then using extractors/privacy amplification to distill a shorter secret.
+- **Bell loopholes become security issues under adversarial modeling.** Loopholes that may be “optional” in a nature-testing experiment are not optional when the experiment is embedded in a protocol against an adversary.
+
+The Q&A also reinforces a useful modern stance: Ekert treats CHSH/non-signalling correlations as a way to reason about bounds, distinguishes classical and quantum winning probabilities, and is cautious about overclaiming post-quantum classical standards such as lattice-based systems as permanent solutions.
+
+### Relevance to QMoney
+This lecture sharpens the QMoney interpretation of Ekert:
+
+- QMoney should treat **Bell violation as an adversarially meaningful evidence source**, not merely as physics decoration.
+- QMoney should separate **note-family security** from **session/control-plane security**: Bell-style certification is most naturally infrastructure around mint/verify/remint sessions, not automatically the note itself.
+- If QMoney ever uses Bell-certified sessions, it needs explicit treatment of:
+  - random setting generation
+  - measurement independence
+  - detector/source loopholes
+  - Eve-information bounds
+  - extractor/privacy-amplification post-processing
+- Ekert's lecture also strengthens the historical bridge from **Wiesner's conjugate coding** to modern QKD and QMoney: the same family tree includes quantum banknote intuition, Bennett/Brassard key distribution, and Bell-certified security.
+
+### Direct QMoney design consequence
+For QMoney, the transcript supports this design rule:
+
+> A Bell/Ekert layer should first certify the communication/session environment and help distribute or refresh verifier/quorum secrets; it should not be marketed as proof that the current private-key note family is public-key quantum money.
+
+---
+
+## 10. Recent framing: Bell inequalities from curiosity to security (2023–2025 talks)
 Recent Ekert talks and public materials emphasize:
 - Bell inequalities as practical tools for cryptography
 - device independence
@@ -408,7 +456,7 @@ If a future note family uses Bell/nonlocality more directly, it should be treate
 ### Mostly conceptual/background relevance
 6. **Quantum Cryptography and Bell's Theorem** (1992 chapter)
 7. **Secret Sides of Bell's Theorem** (2002)
-8. **Bell inequalities: from curiosity to security** (recent talks)
+8. **Bell inequalities: from curiosity to security** (OIST 2025 transcript + recent talks)
 
 ---
 

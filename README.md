@@ -1,12 +1,12 @@
 # QMoney: A Peer-to-Peer Quantum Money System
 
-Quantum money has been studied since the late 1960s and early 1980s. QMoney revisits that line of work as a research program: can quantum no-cloning become an anti-counterfeiting layer for future cash-like systems while classical cryptographic ledgers handle ownership, settlement, and finality?
+Quantum money was first conceptualized in the late 1960s. QMoney revisits "quantum money" as a research program: can quantum no-cloning become an anti-counterfeiting layer for future cash-like systems while classical cryptographic ledgers handle ownership, settlement, and finality? As quantum computing keeping evolving and Bitcoin facing growing quantum threats, QMoney is to provide an alternative approach to think about a quantum computing digital currency.
 
 This repository is **not** a production currency, token, wallet, or hardware implementation. It is a _work-in-progress_ simulator and architecture workspace for "distributed private-key quantum cash" inspired by:
 
 - **[Stephen Wiesner](https://scottaaronson.blog/?p=5730) / [Peter Shor](https://math.mit.edu/~shor/)'s quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
 - **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf)'s private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
-- **Artur Ekert's quantum cryptography ideas**: Bell-inequality security witnesses, entanglement-based key distribution, noisy-channel privacy amplification, and the distinction between note-family security and infrastructure/session certification
+- **[Artur Ekert's quantum cryptography ideas](https://www.youtube.com/watch?v=Fbcfx_vZyG0)**: Bell-inequality security witnesses, entanglement-based key distribution, noisy-channel privacy amplification, and the distinction between note-family security and infrastructure/session certification
 - **[Satoshi Nakamoto](https://bitcoin.org/bitcoin.pdf)'s Bitcoin**: public ownership, signed transfer intent, distributed validation, and ledger finality
 - and more...(to be added here).
 
@@ -205,7 +205,7 @@ not near-term deployment of production quantum money.
 - [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md) — transcript-backed note on Aaronson’s private-key quantum money ideas, adaptive-query security, compact-secret tradeoffs, and why QMoney fits the distributed private-key lineage.
 - [`docs/research/wiesner-counterfeiting-attacks-and-qmoney.md`](docs/research/wiesner-counterfeiting-attacks-and-qmoney.md) — evaluation of Molina–Vidick–Watrous (2012) for QMoney, including why the paper's one-note-to-two-notes counterfeiting model is a strong fit for the current private-key baseline.
 - [`docs/research/latest-quantum-money-literature-and-qmoney.md`](docs/research/latest-quantum-money-literature-and-qmoney.md) — survey of the latest quantum money literature most relevant to QMoney, prioritizing Wiesner, Shor, Aaronson/Christiano, Zhandry, and recent oracle/noise-tolerant directions.
-- [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md) — review of Artur Ekert’s quantum-cryptography work and what Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and measurement-independence assumptions imply for QMoney.
+- [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md) — transcript-backed review of Artur Ekert’s quantum-cryptography work and what Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and measurement-independence assumptions imply for QMoney.
 - [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md) — ranked reading and prototyping roadmap for QMoney: what to read next, prototype next, monitor, and avoid.
 - [`docs/research/note-family-evaluation-checklist.md`](docs/research/note-family-evaluation-checklist.md) — checklist for evaluating future note families across verifier leakage, coherence sensitivity, counterfeiting, public/private status, noise, and repo integration.
 
@@ -378,3 +378,4 @@ See:
 - Peter Shor seminar transcript notes in this repo: [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md)
 - Scott Aaronson seminar transcript notes in this repo: [`docs/research/aaronson-private-key-quantum-money-and-qmoney.md`](docs/research/aaronson-private-key-quantum-money-and-qmoney.md)
 - Artur Ekert review note in this repo: [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md)
+- Local transcript of Artur Ekert’s OIST 2025 lecture, *Bell Inequalities: From Curiosity to Security*: [`docs/research/transcripts/ekert-bell-inequalities-curiosity-to-security-transcript.md`](docs/research/transcripts/ekert-bell-inequalities-curiosity-to-security-transcript.md)

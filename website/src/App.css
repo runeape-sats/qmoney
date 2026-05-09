@@ -497,6 +497,31 @@
   transform: translateY(-1px);
 }
 
+.reference-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-link-icon {
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  color: var(--text-muted);
+  opacity: 0.72;
+  transition:
+    color 140ms ease,
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.reference-link:hover .card-link-icon {
+  color: var(--text-primary);
+  opacity: 1;
+  transform: translate(1px, -1px);
+}
+
 .reference-title {
   color: var(--text-primary);
   font-weight: 600;
