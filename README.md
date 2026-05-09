@@ -1,12 +1,12 @@
 # QMoney: A Peer-to-Peer Quantum Money System
 
-Quantum money has been studied since the late 1960s and early 1980s. QMoney revisits that line of work as a research program: can quantum no-cloning become an anti-counterfeiting layer for future cash-like systems while classical cryptographic ledgers handle ownership, settlement, and finality?
+Quantum money was first conceptualized in the late 1960s. QMoney revisits "quantum money" as a research program: can quantum no-cloning become an anti-counterfeiting layer for future cash-like systems while classical cryptographic ledgers handle ownership, settlement, and finality? As quantum computing keeping evolving and Bitcoin facing growing quantum threats, QMoney is to provide an alternative approach to think about a quantum computing digital currency.
 
 This repository is **not** a production currency, token, wallet, or hardware implementation. It is a _work-in-progress_ simulator and architecture workspace for "distributed private-key quantum cash" inspired by:
 
 - **[Stephen Wiesner](https://scottaaronson.blog/?p=5730) / [Peter Shor](https://math.mit.edu/~shor/)'s quantum money ideas**: unclonable quantum states, hidden verification data, and the distinction between private-key and public-key quantum money
 - **[Scott Aaronson / Paul Christiano](https://www.scottaaronson.com/papers/moneyfull.pdf)'s private-key quantum money ideas**: adaptive-query security, compact-secret tradeoffs, mini-scheme vs full-scheme thinking, and the importance of rigorous verifier models
-- **Artur Ekert's quantum cryptography ideas**: Bell-inequality security witnesses, entanglement-based key distribution, noisy-channel privacy amplification, and the distinction between note-family security and infrastructure/session certification
+- **[Artur Ekert's quantum cryptography ideas](https://www.youtube.com/watch?v=Fbcfx_vZyG0)**: Bell-inequality security witnesses, entanglement-based key distribution, noisy-channel privacy amplification, and the distinction between note-family security and infrastructure/session certification
 - **[Satoshi Nakamoto](https://bitcoin.org/bitcoin.pdf)'s Bitcoin**: public ownership, signed transfer intent, distributed validation, and ledger finality
 - and more...(to be added here).
 
