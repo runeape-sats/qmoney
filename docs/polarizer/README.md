@@ -1,6 +1,9 @@
+
 # QMoney Polarizer Docs
 
-This folder collects the docs related to the QMoney polarizer / physical-intuition demo.
+<img width="256" alt="qmoney-polarizer-logo" src="https://github.com/user-attachments/assets/88ea7a65-be5d-43d5-942c-f2f4791d6784" />
+
+Quantum Money idea can be illustrated with a 3-polarizer experiment.
 
 ## Files
 
