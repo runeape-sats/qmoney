@@ -67,8 +67,8 @@ const fragmentShader = `
     float amp = 0.5;
     vec2 shift = vec2(uSeed * 0.13, uSeed * 0.07);
 
-    for (int i = 0; i < 5; i++) {
-      if (i > 2 && d < 18.0) break;
+    for (int i = 0; i < 4; i++) {
+      if (i > 2) break;
       value += amp * noise2d(p + shift);
       p = rot55 * p * uFractalStep + vec2(1.7, -0.6);
       amp *= 0.52 + uFractalAmp;
@@ -106,14 +106,14 @@ const fragmentShader = `
     float t = 0.0;
     float hit = 0.0;
 
-    for (int i = 0; i < 58; i++) {
+    for (int i = 0; i < 46; i++) {
       p = ro + rd * t;
       float d = mapScene(p, t);
-      if (abs(d) < 0.014 || t > 42.0) {
-        hit = step(t, 42.0);
+      if (abs(d) < 0.02 || t > 48.0) {
+        hit = step(t, 48.0);
         break;
       }
-      t += max(abs(d) * 0.42, 0.035);
+      t += max(abs(d) * 0.56, 0.055);
     }
 
     return hit;
@@ -131,12 +131,12 @@ const fragmentShader = `
     vec2 uv = (fragCoord * 2.0 - iResolution.xy) / max(iResolution.x, iResolution.y);
     float aspect = iResolution.x / iResolution.y;
 
-    vec3 ro = vec3(0.0, 1.15, -4.3 + iTime * uSpeed * 0.34);
-    vec3 target = vec3(0.0, -0.12, ro.z + 4.8);
+    vec3 ro = vec3(0.0, 1.85, -7.2 + iTime * uSpeed * 0.18);
+    vec3 target = vec3(0.0, -0.32, ro.z + 8.2);
     vec3 ww = normalize(target - ro);
     vec3 uu = normalize(cross(vec3(0.0, 1.0, 0.0), ww));
     vec3 vv = normalize(cross(ww, uu));
-    vec3 rd = normalize(uv.x * uu * aspect + uv.y * vv + 1.75 * ww);
+    vec3 rd = normalize(uv.x * uu * aspect + uv.y * vv + 1.28 * ww);
     rd.xz = getRotationMatrix(0.025 * sin(iTime * 0.17)) * rd.xz;
 
     vec3 horizon = getGradient(uv.y * 0.18 + 0.54 + iTime * 0.015, uColor1, uColor2, uColor3, uColor4);
@@ -208,13 +208,13 @@ export default function QuantumLandscapeBackground() {
         const uniforms = {
           iResolution: { value: new THREE.Vector2() },
           iTime: { value: 0 },
-          uSpeed: { value: 2.0 },
+          uSpeed: { value: 0.82 },
           uFractalStep: { value: 0.020531 },
           uFractalAmp: { value: 0.06688 },
-          uTerrainScale: { value: 0.64 },
-          uTerrainBaseHeight: { value: 0.8 },
-          uTerrainAmp: { value: 0.9 },
-          uGroundOffset: { value: 2.3 },
+          uTerrainScale: { value: 0.42 },
+          uTerrainBaseHeight: { value: 0.56 },
+          uTerrainAmp: { value: 0.7 },
+          uGroundOffset: { value: 2.65 },
           uColor1: { value: new THREE.Color('#0a9fbd') },
           uColor2: { value: new THREE.Color('#00d2ff') },
           uColor3: { value: new THREE.Color('#001adb') },
@@ -235,7 +235,7 @@ export default function QuantumLandscapeBackground() {
         scene.add(mesh)
 
         const updateDPR = () => {
-          const dpr = Math.min(window.devicePixelRatio || 1, 1.35)
+          const dpr = Math.min(window.devicePixelRatio || 1, 0.9)
           renderer.setPixelRatio(dpr)
         }
 
@@ -253,9 +253,14 @@ export default function QuantumLandscapeBackground() {
 
         const clock = new THREE.Clock()
         let frameId = 0
-        const animate = () => {
-          uniforms.iTime.value = clock.getElapsedTime()
-          renderer.render(scene, camera)
+        let lastRender = 0
+        const frameInterval = 1000 / 30
+        const animate = (now = 0) => {
+          if (now - lastRender >= frameInterval) {
+            uniforms.iTime.value = clock.getElapsedTime()
+            renderer.render(scene, camera)
+            lastRender = now
+          }
           frameId = requestAnimationFrame(animate)
         }
         animate()
