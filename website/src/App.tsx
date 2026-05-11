@@ -1,5 +1,6 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useState } from 'react'
 import qmoneyLogo from './assets/qmoney-logo.svg'
+import QuantumLandscapeBackground from './QuantumLandscapeBackground'
 import './App.css'
 
 const introPoints = [
@@ -133,18 +134,6 @@ const currentReferences = [
   },
 ]
 
-const backgroundParticles = Array.from({ length: 18 }, (_, index) => ({
-  id: index,
-  delay: `${index * -1.7}s`,
-  duration: `${18 + (index % 6) * 3}s`,
-  left: `${6 + ((index * 17) % 88)}%`,
-  top: `${8 + ((index * 23) % 68)}%`,
-  size: `${6 + (index % 4) * 3}px`,
-}))
-
-const terrainLines = Array.from({ length: 16 }, (_, index) => index)
-
-const terrainColumns = Array.from({ length: 15 }, (_, index) => index)
 
 const comparisonRows = [
   {
@@ -277,49 +266,6 @@ function LinkIcon() {
         strokeWidth="1.8"
       />
     </svg>
-  )
-}
-
-function QuantumLandscapeBackground() {
-  return (
-    <div className="site-background" aria-hidden="true" data-testid="quantum-landscape-background">
-      <div className="background-orb background-orb-large" />
-      <div className="background-orb background-orb-small" />
-      <div className="background-horizon" />
-      <div className="particle-field">
-        {backgroundParticles.map((particle) => (
-          <span
-            className="background-particle"
-            key={particle.id}
-            style={{
-              '--particle-delay': particle.delay,
-              '--particle-duration': particle.duration,
-              '--particle-left': particle.left,
-              '--particle-size': particle.size,
-              '--particle-top': particle.top,
-            } as CSSProperties}
-          />
-        ))}
-      </div>
-      <div className="terrain-stage">
-        <div className="terrain-grid terrain-grid-back">
-          {terrainLines.map((line) => (
-            <span className="terrain-line terrain-line-horizontal" key={`back-row-${line}`} />
-          ))}
-          {terrainColumns.map((line) => (
-            <span className="terrain-line terrain-line-vertical" key={`back-column-${line}`} />
-          ))}
-        </div>
-        <div className="terrain-grid terrain-grid-front">
-          {terrainLines.map((line) => (
-            <span className="terrain-line terrain-line-horizontal" key={`front-row-${line}`} />
-          ))}
-          {terrainColumns.map((line) => (
-            <span className="terrain-line terrain-line-vertical" key={`front-column-${line}`} />
-          ))}
-        </div>
-      </div>
-    </div>
   )
 }
 

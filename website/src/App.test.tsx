@@ -67,8 +67,7 @@ describe('App', () => {
     const { container } = render(<App />)
 
     expect(screen.getByTestId('quantum-landscape-background')).toHaveAttribute('aria-hidden', 'true')
-    expect(container.querySelectorAll('.terrain-grid')).toHaveLength(2)
-    expect(container.querySelectorAll('.background-particle')).toHaveLength(18)
+    expect(container.querySelector('.quantum-landscape-canvas')).not.toBeInTheDocument()
   })
 
   it('surfaces intro, comparison, history, and current references from the readme', () => {
