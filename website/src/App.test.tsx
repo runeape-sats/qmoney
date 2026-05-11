@@ -63,6 +63,14 @@ describe('App', () => {
     expect(siteMenu).toHaveAttribute('hidden')
   })
 
+  it('renders the ambient quantum landscape background behind the page content', () => {
+    const { container } = render(<App />)
+
+    expect(screen.getByTestId('quantum-landscape-background')).toHaveAttribute('aria-hidden', 'true')
+    expect(container.querySelectorAll('.terrain-grid')).toHaveLength(2)
+    expect(container.querySelectorAll('.background-particle')).toHaveLength(18)
+  })
+
   it('surfaces intro, comparison, history, and current references from the readme', () => {
     render(<App />)
 
