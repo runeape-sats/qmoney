@@ -119,29 +119,21 @@ const fragmentShader = `
     return hit;
   }
 
-  vec3 stars(vec2 uv) {
-    vec2 gv = floor(uv * vec2(120.0, 70.0));
-    float n = hash(gv + uSeed);
-    float sparkle = smoothstep(0.988, 1.0, n) * (0.45 + 0.55 * sin(iTime * 1.8 + n * 40.0));
-    return vec3(sparkle) * 0.18;
-  }
-
   void main() {
     vec2 fragCoord = gl_FragCoord.xy;
     vec2 uv = (fragCoord * 2.0 - iResolution.xy) / max(iResolution.x, iResolution.y);
     float aspect = iResolution.x / iResolution.y;
 
-    vec3 ro = vec3(0.0, 1.85, -7.2 + iTime * uSpeed * 0.18);
-    vec3 target = vec3(0.0, -0.32, ro.z + 8.2);
+    vec3 ro = vec3(0.0, 2.35, -10.4 + iTime * uSpeed * 0.13);
+    vec3 target = vec3(0.0, -0.44, ro.z + 11.6);
     vec3 ww = normalize(target - ro);
     vec3 uu = normalize(cross(vec3(0.0, 1.0, 0.0), ww));
     vec3 vv = normalize(cross(ww, uu));
-    vec3 rd = normalize(uv.x * uu * aspect + uv.y * vv + 1.28 * ww);
+    vec3 rd = normalize(uv.x * uu * aspect + uv.y * vv + 1.58 * ww);
     rd.xz = getRotationMatrix(0.025 * sin(iTime * 0.17)) * rd.xz;
 
     vec3 horizon = getGradient(uv.y * 0.18 + 0.54 + iTime * 0.015, uColor1, uColor2, uColor3, uColor4);
     vec3 sky = mix(vec3(0.004, 0.008, 0.026), horizon * 0.38, smoothstep(-0.34, 0.76, uv.y));
-    sky += stars(uv + vec2(iTime * 0.006, 0.0));
 
     vec3 p;
     float hit = trace(ro, rd, p);
@@ -211,10 +203,10 @@ export default function QuantumLandscapeBackground() {
           uSpeed: { value: 0.82 },
           uFractalStep: { value: 0.020531 },
           uFractalAmp: { value: 0.06688 },
-          uTerrainScale: { value: 0.42 },
-          uTerrainBaseHeight: { value: 0.56 },
-          uTerrainAmp: { value: 0.7 },
-          uGroundOffset: { value: 2.65 },
+          uTerrainScale: { value: 0.31 },
+          uTerrainBaseHeight: { value: 0.46 },
+          uTerrainAmp: { value: 0.52 },
+          uGroundOffset: { value: 3.1 },
           uColor1: { value: new THREE.Color('#0a9fbd') },
           uColor2: { value: new THREE.Color('#00d2ff') },
           uColor3: { value: new THREE.Color('#001adb') },
