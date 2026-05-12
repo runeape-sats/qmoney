@@ -109,11 +109,11 @@ const fragmentShader = `
     for (int i = 0; i < 46; i++) {
       p = ro + rd * t;
       float d = mapScene(p, t);
-      if (abs(d) < 0.02 || t > 48.0) {
-        hit = step(t, 48.0);
+      if (abs(d) < 0.026 || t > 115.0) {
+        hit = step(t, 115.0);
         break;
       }
-      t += max(abs(d) * 0.56, 0.055);
+      t += max(abs(d) * 0.82, 0.09);
     }
 
     return hit;
@@ -124,12 +124,12 @@ const fragmentShader = `
     vec2 uv = (fragCoord * 2.0 - iResolution.xy) / max(iResolution.x, iResolution.y);
     float aspect = iResolution.x / iResolution.y;
 
-    vec3 ro = vec3(0.0, 2.35, -10.4 + iTime * uSpeed * 0.13);
-    vec3 target = vec3(0.0, -0.44, ro.z + 11.6);
+    vec3 ro = vec3(0.0, 5.35, -52.0 + iTime * uSpeed * 0.06);
+    vec3 target = vec3(0.0, -0.78, ro.z + 58.0);
     vec3 ww = normalize(target - ro);
     vec3 uu = normalize(cross(vec3(0.0, 1.0, 0.0), ww));
     vec3 vv = normalize(cross(ww, uu));
-    vec3 rd = normalize(uv.x * uu * aspect + uv.y * vv + 1.58 * ww);
+    vec3 rd = normalize(uv.x * uu * aspect + uv.y * vv + 2.35 * ww);
     rd.xz = getRotationMatrix(0.025 * sin(iTime * 0.17)) * rd.xz;
 
     vec3 horizon = getGradient(uv.y * 0.18 + 0.54 + iTime * 0.015, uColor1, uColor2, uColor3, uColor4);
@@ -146,7 +146,7 @@ const fragmentShader = `
       float fresnel = pow(1.0 - clamp(dot(-rd, n), 0.0, 1.0), 2.0);
       float lines = smoothstep(0.985, 1.0, sin(p.x * 5.8) * 0.5 + 0.5) +
                     smoothstep(0.988, 1.0, sin((p.z + iTime * uSpeed) * 5.4) * 0.5 + 0.5);
-      float fog = smoothstep(7.0, 36.0, length(p - ro));
+      float fog = smoothstep(24.0, 96.0, length(p - ro));
       vec3 terrainColor = getGradient(p.y * 0.08 + p.z * 0.015 + iTime * 0.025, uColor1, uColor2, uColor3, uColor4);
       col = terrainColor * (0.18 + diff * 0.55) + terrainColor * fresnel * 0.9;
       col += terrainColor * lines * 0.22;
@@ -203,14 +203,14 @@ export default function QuantumLandscapeBackground() {
           uSpeed: { value: 0.82 },
           uFractalStep: { value: 0.020531 },
           uFractalAmp: { value: 0.06688 },
-          uTerrainScale: { value: 0.31 },
-          uTerrainBaseHeight: { value: 0.46 },
-          uTerrainAmp: { value: 0.52 },
-          uGroundOffset: { value: 3.1 },
-          uColor1: { value: new THREE.Color('#0a9fbd') },
-          uColor2: { value: new THREE.Color('#00d2ff') },
-          uColor3: { value: new THREE.Color('#001adb') },
-          uColor4: { value: new THREE.Color('#ff0055') },
+          uTerrainScale: { value: 0.062 },
+          uTerrainBaseHeight: { value: 0.24 },
+          uTerrainAmp: { value: 0.18 },
+          uGroundOffset: { value: 6.4 },
+          uColor1: { value: new THREE.Color('#007f68') },
+          uColor2: { value: new THREE.Color('#00f5d4') },
+          uColor3: { value: new THREE.Color('#0ad66f') },
+          uColor4: { value: new THREE.Color('#006dff') },
           uSeed: { value: 144.0 },
         }
 
