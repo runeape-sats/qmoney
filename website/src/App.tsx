@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import qmoneyLogo from './assets/qmoney-logo.svg'
+import QuantumLandscapeBackground from './QuantumLandscapeBackground'
 import './App.css'
 
 const introPoints = [
@@ -132,6 +133,7 @@ const currentReferences = [
     ],
   },
 ]
+
 
 const comparisonRows = [
   {
@@ -305,7 +307,9 @@ function App() {
   const handleMobileNavClick = () => setIsMobileMenuOpen(false)
 
   return (
-    <div className="page">
+    <>
+      <QuantumLandscapeBackground />
+      <div className="page">
       <header className="site-header">
         <div className="header-top-row">
           <a className="brand" href="#top" aria-label="QMoney home">
@@ -546,7 +550,8 @@ function App() {
           </p>
         </section>
       </main>
-    </div>
+      </div>
+    </>
   )
 }
 
