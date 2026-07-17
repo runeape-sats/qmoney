@@ -2,6 +2,8 @@
 
 ## Executive answer
 
+> **Implementation design:** [`../architecture/qmoney-quantum-circuit-contest-design.md`](../architecture/qmoney-quantum-circuit-contest-design.md) turns this feasibility study into a concrete pilot track, trusted harness, score, packaging contract, governance model, and launch plan.
+
 **Yes, but the repository does not yet contain a “QMoney core circuit” comparable to the ECDLP 5-bit contest oracle.** The current private-key track is a symbolic BB84 product-state simulator, and the public-key track is a tiny amplitude-dictionary model. Neither emits a reversible gate stream, freezes a circuit ABI, or measures circuit resources.
 
 The strongest first benchmark is **not** the current BB84 mint/measure loop. That loop has no entangling gates and no Toffoli bottleneck, so an ECDLP-style Toffoli score would collapse to zero. The best first target is a small **hidden-subspace verifier circuit** whose standard-basis and Hadamard-basis membership tests are compiled into parity/syndrome networks.

@@ -199,6 +199,7 @@ not near-term deployment of production quantum money.
 - [`docs/architecture/classical-simulation-hardware-breakdown.md`](docs/architecture/classical-simulation-hardware-breakdown.md) — RAM/VRAM breakdown for MPS, sparse state-vector, and BB84 symbolic simulation approaches.
 - [`docs/architecture/private-key-quorum-threat-model.md`](docs/architecture/private-key-quorum-threat-model.md) — first-pass threat model for the current private-key quorum baseline, including adversary classes, quorum semantics, remint failure modes, and noise/tolerance questions.
 - [`docs/architecture/public-key-implementation-workflow.md`](docs/architecture/public-key-implementation-workflow.md) — implementation source of truth for AI agents and human implementers extending the public-key/oracle track in any language.
+- [`docs/architecture/qmoney-quantum-circuit-contest-design.md`](docs/architecture/qmoney-quantum-circuit-contest-design.md) — implementation-ready design for the QMoney quantum circuit contest, including the pilot track contract, ABI, exact evaluator, scoring, sandbox, packaging, governance, and launch plan.
 
 ### Research notes
 - [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md) — how Peter Shor’s arguments should shape QMoney’s architecture split, terminology, and public-key research boundaries.
