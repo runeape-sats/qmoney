@@ -199,6 +199,7 @@ not near-term deployment of production quantum money.
 - [`docs/architecture/classical-simulation-hardware-breakdown.md`](docs/architecture/classical-simulation-hardware-breakdown.md) — RAM/VRAM breakdown for MPS, sparse state-vector, and BB84 symbolic simulation approaches.
 - [`docs/architecture/private-key-quorum-threat-model.md`](docs/architecture/private-key-quorum-threat-model.md) — first-pass threat model for the current private-key quorum baseline, including adversary classes, quorum semantics, remint failure modes, and noise/tolerance questions.
 - [`docs/architecture/public-key-implementation-workflow.md`](docs/architecture/public-key-implementation-workflow.md) — implementation source of truth for AI agents and human implementers extending the public-key/oracle track in any language.
+- [`docs/architecture/qmoney-quantum-circuit-contest-design.md`](docs/architecture/qmoney-quantum-circuit-contest-design.md) — implementation-ready design for the QMoney quantum circuit contest, including the pilot track contract, ABI, exact evaluator, scoring, sandbox, packaging, governance, and launch plan.
 
 ### Research notes
 - [`docs/research/shor-arguments-and-qmoney-integration.md`](docs/research/shor-arguments-and-qmoney-integration.md) — how Peter Shor’s arguments should shape QMoney’s architecture split, terminology, and public-key research boundaries.
@@ -208,6 +209,7 @@ not near-term deployment of production quantum money.
 - [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md) — transcript-backed review of Artur Ekert’s quantum-cryptography work and what Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and measurement-independence assumptions imply for QMoney.
 - [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md) — ranked reading and prototyping roadmap for QMoney: what to read next, prototype next, monitor, and avoid.
 - [`docs/research/note-family-evaluation-checklist.md`](docs/research/note-family-evaluation-checklist.md) — checklist for evaluating future note families across verifier leakage, coherence sensitivity, counterfeiting, public/private status, noise, and repo integration.
+- [`docs/research/qmoney-circuit-optimization-benchmark.md`](docs/research/qmoney-circuit-optimization-benchmark.md) — feasibility study for turning QMoney into circuit-optimization benchmarks, recommending a hidden-subspace verifier synthesis track and a one-note-to-two-notes counterfeit-attack track.
 
 ---
 
