@@ -130,6 +130,13 @@ Use a versioned suite of full-rank generator matrices `G` and parity-check matri
 
 The semantic object is the subspace, not one arbitrary matrix basis. Contestants should be allowed to replace `G` or `H_A` with row-equivalent full-rank matrices when that preserves the same membership projector. Choosing better generator/parity bases is part of the intended optimization surface.
 
+Use two explicitly different modes rather than mixing their claims:
+
+- **Transparent CSS synthesis mode (recommended pilot):** the builder receives `G`/`H_A` and optimizes their state-preparation or syndrome circuits. This is a compiler benchmark and makes no cryptographic secrecy claim.
+- **Opaque-oracle verifier mode (later):** contestant code receives only capability handles such as `query_A` and `query_A_perp`; the trusted layer hides generators/support and ranks oracle-query count before gate resources. This is closer to the black-box verifier model but requires a much stronger sandbox boundary.
+
+A useful public smoke fixture before the held-out `n=8` suite is `n=3`, with generators `101` and `011`. Its support is `{000, 101, 011, 110}`, and a baseline mint uses `H(0)`, `H(1)`, `CX(0,2)`, `CX(1,2)`.
+
 ### Mathematical contract
 
 For a basis vector `x in F_2^n`:
@@ -228,6 +235,8 @@ Report, but do not initially combine into the primary score:
 - accepted-note preservation fidelity under a named noise model.
 
 A later hardware-specific track can score native entangling error budget rather than abstract `CNOT` count.
+
+For a multi-instance suite, normalize each score against a versioned reference circuit and aggregate with a weighted geometric mean. Publish the worst normalized instance as a secondary tie-breaker so one pathological matrix cannot be hidden by many easy wins.
 
 ### Optional mint companion
 
@@ -335,11 +344,20 @@ This directly operationalizes the repo's existing one-note-to-two-notes threat m
 
 It is more security-relevant than reducing the gate count of the BB84 verifier itself.
 
+The current `one_note_to_two_counterfeit_trial(...)` helper is not yet this physical attack interface. It performs intercept/resend in a guessed basis and then duplicates an already-classical Python state description. For one BB84 qubit its exact joint-pass probability is `5/8`: a correct basis guess occurs with probability `1/2` and then both pass, while a wrong basis guess occurs with probability `1/2` and both independently pass with probability `1/4`. The optimal quantum one-to-two channel reaches `3/4`. The benchmark must therefore score a physical CPTP map, not reuse the current helper as its correctness oracle.
+
 ---
 
 ## 3.3 Track C — coherent programmable BB84 verifier (microbenchmark only)
 
-A reversible or coherent kernel could take basis/bit descriptions as controls, rotate the candidate qubits, compute mismatch bits, and coherently aggregate an acceptance flag.
+A reversible or coherent kernel could take basis/bit descriptions as fixed classical instance data, rotate the candidate qubits, compute mismatch bits, and coherently aggregate an acceptance flag. For `P_(B,V) = H^B X^V`, a precise non-consumptive contract is:
+
+```text
+|psi_y>_Q |0^w>_W |a>_A
+    -> |psi_y>_Q |0^w>_W |a XOR [wt(y) <= t]>_A
+```
+
+where `|psi_y> = P_(B,V)|y>`. A reference circuit applies `P†`, reversibly computes the Hamming-weight threshold, toggles the decision flag, uncomputes the predicate, and restores `P`. For `t > 0`, popcount/threshold comparison creates genuine qubit/Toffoli/depth tradeoffs and can use the ECDLP score `Q * sqrt(T_count * T_depth)`.
 
 Possible ABI:
 
@@ -408,6 +426,10 @@ qmoney_circuit_bench/
 
 For a public contest, package the trusted evaluator separately so contestant code cannot import it. The repository pilot can keep both sides visible while the ABI and metrics stabilize.
 
+Use public conformance fixtures plus server-held randomized instances generated after candidate circuit construction. Functional shots alone do not define admissibility: the capability API and computational model must independently forbid support tables, hidden test-ID branching, and direct accepting-state reconstruction.
+
+The existing QMoney TLA+/Z3 lifecycle checks should remain hard release gates for issuance, oracle publication, query logging, and verification transitions, but they should not be mixed into the circuit-resource score.
+
 ### Required workflow
 
 ```text
@@ -416,6 +438,7 @@ setup
   -> build candidate op stream
   -> exact semantic validation
   -> resource measurement
+  -> lifecycle/formal release gates
   -> package editable paths only
   -> validate package independently
   -> submit/poll terminal result
@@ -484,6 +507,7 @@ Reject:
 4. Emit a baseline Gaussian-elimination/parity-network circuit.
 5. Produce `score.json`, `results.tsv`, and a validation receipt.
 6. Add mutation tests proving that phase errors, wrong syndromes, and dirty ancillas are rejected.
+7. Hash source archives and emitted circuit artifacts; delete stale op/score files before every build; rebuild submitted source inside a locked, offline sandbox.
 
 ### Phase 2 — optimization surface
 
