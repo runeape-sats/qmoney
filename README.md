@@ -208,6 +208,7 @@ not near-term deployment of production quantum money.
 - [`docs/research/ekert-quantum-cryptography-and-qmoney.md`](docs/research/ekert-quantum-cryptography-and-qmoney.md) — transcript-backed review of Artur Ekert’s quantum-cryptography work and what Bell-certified security, entanglement-based key exchange, noisy-channel privacy amplification, and measurement-independence assumptions imply for QMoney.
 - [`docs/research/quantum-money-literature-roadmap.md`](docs/research/quantum-money-literature-roadmap.md) — ranked reading and prototyping roadmap for QMoney: what to read next, prototype next, monitor, and avoid.
 - [`docs/research/note-family-evaluation-checklist.md`](docs/research/note-family-evaluation-checklist.md) — checklist for evaluating future note families across verifier leakage, coherence sensitivity, counterfeiting, public/private status, noise, and repo integration.
+- [`docs/research/qmoney-circuit-optimization-benchmark.md`](docs/research/qmoney-circuit-optimization-benchmark.md) — feasibility study for turning QMoney into circuit-optimization benchmarks, recommending a hidden-subspace verifier synthesis track and a one-note-to-two-notes counterfeit-attack track.
 
 ---
 
